@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Posts</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+<div class="collapse navbar-collapse" id="mainMenu">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="nav-item">
+            <a class="nav-link active" th:href="@{/posts}">Posts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link"  th:href="@{/creator}">Add post</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link"  th:href="@{/user/panel/} + ${userId}">User panel</a>
+        </li>
+    </ul>
+
+
+
+    <ul class="navbar-nav my-2 my-lg-0">
+        <li class="nav-item">
+            <label  class="nav-link" th:text="'Hello ' + ${username}"></label>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link"  th:href="@{/logout}">Log out</a>
+        </li>
+    </ul>
+
+</div>
+</nav>
+
+<div class="container postsList">
+
+
+        <th:block th:each="post : ${posts}">
+            <div class="jumbotron">
+
+                <div class="d-inline float-left">
+               <a th:href="@{/edit/}+${post.id}">
+                    <i class="fa fa-edit"></i>
+                </a>
+                </div>
+
+                <div class="d-inline float-right">
+            <a th:href="@{/delete/}+${post.id}">
+                    <i class="fa fa-close"></i>
+                </a>
+                </div>
+
+                <br/>
+
+                <div class="postContent">
+                <h2 th:text="${post.title}"></h2>
+                    <h2 th:text="${post.id}"></h2>
+                <p th:text="${post.content}"></p>
+                </div>
+
+                <div class="d-flex ">
+                    <small th:text="'Made by: ' + ${post.authorName}"> </small>
+                </div>
+                <div class="d-inline float-right">
+                    <small th:text="'Created: ' + ${#dates.format(post.createdDate, 'dd-MM-yyyy HH:mm')}"></small>
+                </div>
+
+                <div class="d-inline float-left">
+                <small th:text="'Last update: ' + ${#dates.format(post.updatedDate, 'dd-MM-yyyy HH:mm')}"> </small>
+                </div>
+                <br/>
+                <br/>
+
+
+                <th:block th:each="oneTag : ${tags}">
+                    <div th:if="${oneTag.postId} eq ${post.id}" class="d-inline float-left">
+                        <button type="button" class="btn btn-outline-dark btn-sm"><p th:text="${oneTag.tag} +' '+ ${oneTag.id}"></p></button>
+                     </div>
+                </th:block>
+
+
+            </div>
+        </th:block>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>
