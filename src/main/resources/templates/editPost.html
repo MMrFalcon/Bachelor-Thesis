@@ -63,12 +63,12 @@
                 <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Name of Error</p>
             </div>
 
-            <div class="form-group">
-                <label for="postContent">Tags, spacing by ','</label>
-                <textarea class="form-control" rows="2" id="postTags" th:field="*{tags}">
-                    </textarea>
-                <p th:if="${#fields.hasErrors('tags')}" th:errors="*{tags}">Name of Error</p>
-            </div>
+            <!--<div class="form-group">-->
+                <!--<label for="postContent">Tags, spacing by ','</label>-->
+                <!--<textarea class="form-control" rows="2" id="postTags" th:field="*{tags}">-->
+                    <!--</textarea>-->
+                <!--<p th:if="${#fields.hasErrors('tags')}" th:errors="*{tags}">Name of Error</p>-->
+            <!--</div>-->
 
 
             <input type="submit" value="Submit" class="btn btn-primary"/>

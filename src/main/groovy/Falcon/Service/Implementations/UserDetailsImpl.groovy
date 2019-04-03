@@ -1,4 +1,4 @@
-package Falcon.Service
+package Falcon.Service.Implementations
 
 
 import Falcon.Persist.Authorities
@@ -49,7 +49,6 @@ class UserDetailsImpl implements UserDetails {
     @Override
     boolean isEnabled() {
        return user.isActive()
-//        return true
     }
 
     User getUser() { this.user }

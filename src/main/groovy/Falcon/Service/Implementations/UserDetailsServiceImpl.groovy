@@ -1,6 +1,7 @@
-package Falcon.Service
+package Falcon.Service.Implementations
 
 import Falcon.Model.UserDTO
+import Falcon.Service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service
 class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    //UserRepository userRepository
     UserService userService
 
     @Autowired
@@ -23,7 +23,6 @@ class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     UserDetails loadUserByUsername(String nameOfUser) throws UsernameNotFoundException {
-//        UserDTO user = userRepository.findByUsername(nameOfUser)
         UserDTO user = userService.getUserByName(nameOfUser)
         if(!user) { throw new UsernameNotFoundException(nameOfUser)}
 

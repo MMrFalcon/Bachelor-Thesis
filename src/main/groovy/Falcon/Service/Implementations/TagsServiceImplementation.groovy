@@ -1,9 +1,10 @@
-package Falcon.Service
+package Falcon.Service.Implementations
 
 import Falcon.Exceptions.InactiveEntityException
 import Falcon.Model.TagsDTO
 import Falcon.Persist.Tags
 import Falcon.Repository.TagsRepository
+import Falcon.Service.TagsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

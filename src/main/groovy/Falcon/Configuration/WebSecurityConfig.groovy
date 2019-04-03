@@ -1,6 +1,6 @@
 package Falcon.Configuration
 
-import Falcon.Service.UserDetailsServiceImpl
+import Falcon.Service.Implementations.UserDetailsServiceImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

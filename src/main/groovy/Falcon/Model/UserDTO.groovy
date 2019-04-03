@@ -12,6 +12,10 @@ class UserDTO {
     private Long points
     private boolean active
 
+    boolean getActive() {
+        return active
+    }
+
     Long getId() { id }
     String getPassword() { password }
     String getUsername() { username }

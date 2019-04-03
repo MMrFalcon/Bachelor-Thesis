@@ -3,10 +3,7 @@ package Falcon.Persist
 import groovy.transform.Canonical
 import groovy.transform.EqualsAndHashCode
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.PrePersist
-import javax.persistence.Table
+import javax.persistence.*
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
@@ -36,6 +33,9 @@ class User extends BaseEntity {
     @Column(name="points")
     private Long points
 
+    @OneToMany(mappedBy = "user")
+    private Set<Post> posts = new HashSet<>()
+
 
     String getPassword() { password }
     String getUsername() { username }
@@ -48,6 +48,14 @@ class User extends BaseEntity {
     void setUsername(String username) {this.username = username}
     void setPassword(String password) {this.password = password}
     void setPoints(Long points) {this.points = points}
+
+    Set<Post> getPosts() {
+        return posts
+    }
+
+    void setPosts(Set<Post> posts) {
+        this.posts = posts
+    }
 
     @PrePersist
     void setPointsAtStart(){

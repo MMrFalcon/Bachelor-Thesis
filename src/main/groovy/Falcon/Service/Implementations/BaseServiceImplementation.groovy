@@ -1,7 +1,8 @@
-package Falcon.Service
+package Falcon.Service.Implementations
 
 import Falcon.Exceptions.InactiveEntityException
 import Falcon.Persist.BaseEntity
+import Falcon.Service.BaseService
 import org.springframework.data.jpa.repository.JpaRepository
 
 import java.util.stream.Collectors

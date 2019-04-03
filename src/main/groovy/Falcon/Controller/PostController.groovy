@@ -1,7 +1,6 @@
 package Falcon.Controller
 
 import Falcon.Model.PostDTO
-import Falcon.Model.TagsDTO
 import Falcon.Service.PostService
 import Falcon.Service.TagsService
 import Falcon.Service.UserService
@@ -33,6 +32,7 @@ class PostController {
     @GetMapping("/creator")
     def getForm(Model model, Authentication authentication) {
         Long userId = userService.getUserByName(authentication.getName()).getId()
+        model.addAttribute("post", new PostDTO())
         model.addAttribute("userId", userId )
         model.addAttribute("username", authentication.getName())
         return "postsForm"
@@ -47,15 +47,7 @@ class PostController {
         if(bindingResult.hasErrors())
             return "postsForm"
 
-        post.setAuthorName(authentication.getName())
-
-
-        def splittedTags = post.getTags().split(',')
-
-        PostDTO postDTO = postService.createPost(post)
-
-        tagsService.generateTags(splittedTags, postDTO.getId())
-
+        postService.createPost(post, userService.getUserByName(authentication.getName()))
         Long points = 1
         userService.updateUserPoints(authentication.getName(), points)
 
@@ -97,20 +89,11 @@ class PostController {
 
         postService.updatePost(id, post)
 
-        def newTags = post.getTags().split(',')
-        List<TagsDTO> oldTags = tagsService.getTagsByPostId(id)
-        tagsService.updateTags(oldTags, newTags, id)
-
-
         return "redirect:/posts"
     }
 
     @GetMapping("/delete/{id}")
     def deletePost(@PathVariable Long id) {
-
-        List<TagsDTO> tags = tagsService.getTagsByPostId(id)
-
-        tagsService.deleteTags(tags)
         postService.delete(id)
         return "redirect:/posts"
     }

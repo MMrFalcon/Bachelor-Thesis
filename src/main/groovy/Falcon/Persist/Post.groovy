@@ -3,9 +3,7 @@ package Falcon.Persist
 import groovy.transform.Canonical
 import groovy.transform.EqualsAndHashCode
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Table
+import javax.persistence.*
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
@@ -25,16 +23,33 @@ class Post extends BaseEntity {
     private String content
 
     @NotNull
-    @Column
-    private String authorName
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user
 
-    private String tags
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    Set<Tags> tags = new HashSet<>()
+
+    Set<Tags> getTags() {
+        return tags
+    }
+
+    void setTags(Set<Tags> tags) {
+        this.tags = tags
+    }
+
+    User getUser() {
+        return user
+    }
+
+    void setUser(User user) {
+        this.user = user
+    }
 
     String getTitle() { title }
     String getContent() { content }
-    String getAuthorName() { this.authorName }
 
     void setTitle(String title) { this.title = title }
     void setContent(String content) { this.content = content }
-    void setAuthorName(authorName) { this.authorName = authorName}
+
     }

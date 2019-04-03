@@ -45,7 +45,7 @@
 
 <div class="container postsList">
 
-
+    <!--/*@thymesVar id="post" type="Falcon.Persist.Post"*/-->
         <th:block th:each="post : ${posts}">
             <div class="jumbotron">
 
@@ -70,7 +70,7 @@
                 </div>
 
                 <div class="d-flex ">
-                    <small th:text="'Made by: ' + ${post.authorName}"> </small>
+                    <small th:text="'Made by: ' + ${post.user.username}"> </small>
                 </div>
                 <div class="d-inline float-right">
                     <small th:text="'Created: ' + ${#dates.format(post.createdDate, 'dd-MM-yyyy HH:mm')}"></small>
@@ -83,11 +83,11 @@
                 <br/>
 
 
-                <th:block th:each="oneTag : ${tags}">
-                    <div th:if="${oneTag.postId} eq ${post.id}" class="d-inline float-left">
-                        <button type="button" class="btn btn-outline-dark btn-sm"><p th:text="${oneTag.tag} +' '+ ${oneTag.id}"></p></button>
-                     </div>
-                </th:block>
+                <!--<th:block th:each="oneTag : ${tags}">-->
+                    <!--<div th:if="${oneTag.postId} eq ${post.id}" class="d-inline float-left">-->
+                        <!--<button type="button" class="btn btn-outline-dark btn-sm"><p th:text="${oneTag.tag} +' '+ ${oneTag.id}"></p></button>-->
+                     <!--</div>-->
+                <!--</th:block>-->
 
 
             </div>
