@@ -1,18 +1,24 @@
 package Falcon.Service.Implementations
 
-import Falcon.Exceptions.InactiveEntityException
+import Falcon.Model.PostDTO
 import Falcon.Model.TagsDTO
+import Falcon.Persist.Post
 import Falcon.Persist.Tags
+import Falcon.Repository.PostRepository
 import Falcon.Repository.TagsRepository
 import Falcon.Service.TagsService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
 class TagsServiceImplementation extends BaseServiceImplementation<Tags, Long, TagsRepository> implements  TagsService {
 
-    @Autowired
-    TagsRepository tagsRepository
+    private TagsRepository tagsRepository
+    private PostRepository postRepository
+
+    TagsServiceImplementation(TagsRepository tagsRepository, PostRepository postRepository) {
+        this.tagsRepository = tagsRepository
+        this.postRepository = postRepository
+    }
 
     @Override
     TagsRepository getRepository() {
@@ -20,75 +26,64 @@ class TagsServiceImplementation extends BaseServiceImplementation<Tags, Long, Ta
     }
 
     @Override
-    TagsDTO createTag(TagsDTO tagsDTO) {
-         return Mapper.tagsToDTO(saveAndFlush(Mapper.dtoToTags(tagsDTO)))
+    TagsDTO createTag(TagsDTO tagsDTO, PostDTO postDTO) {
+        Tags tagsEntity = Mapper.dtoToTags(tagsDTO)
+        println("New tag for save: ${tagsDTO.getTag()}")
+
+        tagsEntity.getPosts().add(Mapper.dtoToPost(postDTO))
+
+        println("Tag Posts list size after adding: ${tagsEntity.getPosts().size()}")
+        println("*************************")
+
+        return Mapper.tagsToDTO(save(tagsEntity))
     }
 
+
     @Override
-    void generateTags(Object tags, Long postId) {
+    Set<TagsDTO> generateTags(String tags, PostDTO postDTO) {
+        Set<TagsDTO> tagsSet = new HashSet<>()
+        
+        def splittedTags = tags.split(" ")
+        
+        if (!splittedTags || splittedTags.size() == 0)
+            throw new RuntimeException("Tags are empty")
 
-        tags.each {
-            tag ->
-                try {
-                    TagsDTO tagsDTO = new TagsDTO(
-                            postId: postId,
-                            tag: tag
-                    )
-
-                    createTag(tagsDTO)
-                }catch(Exception ex) {
-                    println(ex)
-                }
+        splittedTags.each {
+                String tag ->
+                    TagsDTO tagsDTO = new TagsDTO(tag)
+                    tagsSet.add(tagsDTO)
         }
 
+        return tagsSet
     }
 
-    @Override
-    void updateTags(Object oldTags, Object newTags, Long postId) {
-       try {
-           oldTags.each {
-               TagsDTO oldTag ->
-                   delete(oldTag.getId())
-           }
-       }catch(Exception ex) {
-           println(ex)
-       }
 
+    String getPostTagsAsString(Long postId) {
+        Post post = postRepository.getOne(postId)
+        def tagsString = ""
 
-        try {
-            generateTags(newTags, postId)
-        }catch(NullPointerException nullPointer) {
-            println(nullPointer)
-        }catch(InactiveEntityException ex) {
-            println(ex)
-        }catch(Exception ex) {
-            println(ex)
+        post.getTags().each {
+            Tags tags ->
+                tagsString+= "${tags.getTag()} "
         }
 
-
+        tagsString
     }
 
     @Override
-    List<TagsDTO> getTagsByPostId(Long postId) {
-        def tags = tagsRepository.findByPostId(postId) as List<Tags>
-
-        return Mapper.transferTags(tags)
+    TagsDTO getTagByName(String tag) {
+        Optional<Tags> optionalTag = tagsRepository.findByTag(tag)
+        if (optionalTag.isPresent())
+            return Mapper.tagsToDTO(optionalTag.get())
+        else
+            return null
     }
 
     @Override
-    void deleteTags(Object tags) {
-            try {
-                tags.each {
-                    Tags tag ->
-                        delete(tag.getId())
-                }
-            }catch(NullPointerException nullPointer) {
-                println(nullPointer)
-            }catch(InactiveEntityException inactiveEntity) {
-                println(inactiveEntity)
-            }catch(Exception ex) {
-                println(ex)
-            }
-
+    boolean isTagPresent(TagsDTO tagsDTO) {
+        if (getTagByName(tagsDTO.getTag()))
+            return true
+        else
+            return false
     }
 }

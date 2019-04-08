@@ -1,13 +1,15 @@
 package Falcon.Persist
 
-import groovy.transform.Canonical
+
 import groovy.transform.EqualsAndHashCode
 
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.ManyToMany
+import javax.persistence.Table
 import javax.validation.constraints.NotNull
 
 @EqualsAndHashCode(callSuper = true)
-@Canonical
 @Entity
 @Table(name="tags")
 class Tags extends BaseEntity {
@@ -16,16 +18,17 @@ class Tags extends BaseEntity {
     @NotNull
     private String tag
 
-    @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Post post
+    @ManyToMany(mappedBy = "tags")
+    private List<Post> posts
 
-    Post getPost() {
-        return post
+    Tags() {}
+
+    List<Post> getPosts() {
+        return posts
     }
 
-    void setPost(Post post) {
-        this.post = post
+    void setPosts(List<Post> posts) {
+        this.posts = posts
     }
 
     String getTag() { tag }

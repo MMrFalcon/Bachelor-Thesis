@@ -83,11 +83,9 @@
                 <br/>
 
 
-                <!--<th:block th:each="oneTag : ${tags}">-->
-                    <!--<div th:if="${oneTag.postId} eq ${post.id}" class="d-inline float-left">-->
-                        <!--<button type="button" class="btn btn-outline-dark btn-sm"><p th:text="${oneTag.tag} +' '+ ${oneTag.id}"></p></button>-->
-                     <!--</div>-->
-                <!--</th:block>-->
+                <th:block th:each="oneTag : ${post.tags}">
+                        <button type="button" class="btn btn-outline-dark btn-sm"><p th:text="${oneTag.tag} +' '+ ${oneTag.id}"></p></button>
+                </th:block>
 
 
             </div>

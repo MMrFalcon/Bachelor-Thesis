@@ -7,6 +7,10 @@ class TagsDTO {
 
     TagsDTO(){}
 
+    TagsDTO(String tag) {
+        this.tag =tag
+    }
+
 
     String getTag() { tag }
     void setTag(String tag) { this.tag = tag}

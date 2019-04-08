@@ -1,6 +1,6 @@
 package Falcon.Persist
 
-import groovy.transform.Canonical
+
 import groovy.transform.EqualsAndHashCode
 
 import javax.persistence.*
@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 @EqualsAndHashCode(callSuper = true)
-@Canonical
 @Entity
 @Table(name="post")
 class Post extends BaseEntity {
@@ -27,14 +26,16 @@ class Post extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
-    Set<Tags> tags = new HashSet<>()
+    @ManyToMany
+    @JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+               inverseJoinColumns = @JoinColumn(name = "tags_id", referencedColumnName = "id"))
+    List<Tags> tags = new ArrayList<>()
 
-    Set<Tags> getTags() {
+    List<Tags> getTags() {
         return tags
     }
 
-    void setTags(Set<Tags> tags) {
+    void setTags(List<Tags> tags) {
         this.tags = tags
     }
 
