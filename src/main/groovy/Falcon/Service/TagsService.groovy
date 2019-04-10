@@ -6,9 +6,9 @@ import Falcon.Persist.Tags
 import Falcon.Repository.TagsRepository
 
 interface TagsService extends BaseService <Tags, Long, TagsRepository> {
-        TagsDTO createTag(TagsDTO tagsDTO, PostDTO postDTO)
         Set<TagsDTO> generateTags(String tags, PostDTO postDTO)
         String getPostTagsAsString(Long postId)
+        void removeTagsFromPost(PostDTO postDTO)
         TagsDTO getTagByName(String tag)
-        boolean isTagPresent(TagsDTO tag)
+        Tags getTagById(Long id)
 }

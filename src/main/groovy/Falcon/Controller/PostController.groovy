@@ -135,8 +135,7 @@ class PostController {
             return "redirect:/tags/creator/edit/" + postId
 
         Set<TagsDTO> tagsDTOs = tagsService.generateTags(tagsDTO.getTag(), postService.getPostDtoById(postId))
-//        postService.updatePostTags(postId,tagsDTOs)
-        postService.addPostTags(postId,tagsDTOs)
+        postService.updatePostTags(postId,tagsDTOs)
 
         return "redirect:/posts"
     }

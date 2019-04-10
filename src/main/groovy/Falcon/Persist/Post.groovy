@@ -29,15 +29,23 @@ class Post extends BaseEntity {
     @ManyToMany
     @JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "tags_id", referencedColumnName = "id"))
-    List<Tags> tags = new ArrayList<>()
+//    Set<Tags> tags = new HashSet<>()
+      private Set<Tags> tags = new HashSet<>()
 
-    List<Tags> getTags() {
+    Set<Tags> getTags() {
         return tags
     }
 
-    void setTags(List<Tags> tags) {
+    void setTags(Set<Tags> tags) {
         this.tags = tags
     }
+//    List<Tags> getTags() {
+//        return tags
+//    }
+//
+//    void setTags(List<Tags> tags) {
+//        this.tags = tags
+//    }
 
     User getUser() {
         return user

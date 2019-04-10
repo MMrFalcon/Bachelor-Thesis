@@ -1,11 +1,9 @@
 package Falcon.Persist
 
-import groovy.transform.Canonical
-
 import javax.persistence.*
 
 @MappedSuperclass
-@Canonical
+@Inheritance
 class BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

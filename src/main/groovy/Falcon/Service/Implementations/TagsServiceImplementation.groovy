@@ -4,20 +4,21 @@ import Falcon.Model.PostDTO
 import Falcon.Model.TagsDTO
 import Falcon.Persist.Post
 import Falcon.Persist.Tags
-import Falcon.Repository.PostRepository
 import Falcon.Repository.TagsRepository
+import Falcon.Service.PostService
 import Falcon.Service.TagsService
+import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
 
 @Service
 class TagsServiceImplementation extends BaseServiceImplementation<Tags, Long, TagsRepository> implements  TagsService {
 
     private TagsRepository tagsRepository
-    private PostRepository postRepository
+    private PostService postService
 
-    TagsServiceImplementation(TagsRepository tagsRepository, PostRepository postRepository) {
+    TagsServiceImplementation(TagsRepository tagsRepository, @Lazy PostService postService) {
         this.tagsRepository = tagsRepository
-        this.postRepository = postRepository
+        this.postService = postService
     }
 
     @Override
@@ -26,16 +27,8 @@ class TagsServiceImplementation extends BaseServiceImplementation<Tags, Long, Ta
     }
 
     @Override
-    TagsDTO createTag(TagsDTO tagsDTO, PostDTO postDTO) {
-        Tags tagsEntity = Mapper.dtoToTags(tagsDTO)
-        println("New tag for save: ${tagsDTO.getTag()}")
-
-        tagsEntity.getPosts().add(Mapper.dtoToPost(postDTO))
-
-        println("Tag Posts list size after adding: ${tagsEntity.getPosts().size()}")
-        println("*************************")
-
-        return Mapper.tagsToDTO(save(tagsEntity))
+    Tags saveAndFlush(Tags tagsEntity) {
+        return tagsRepository.saveAndFlush(tagsEntity)
     }
 
 
@@ -59,7 +52,7 @@ class TagsServiceImplementation extends BaseServiceImplementation<Tags, Long, Ta
 
 
     String getPostTagsAsString(Long postId) {
-        Post post = postRepository.getOne(postId)
+        Post post = postService.getOne(postId)
         def tagsString = ""
 
         post.getTags().each {
@@ -68,6 +61,16 @@ class TagsServiceImplementation extends BaseServiceImplementation<Tags, Long, Ta
         }
 
         tagsString
+    }
+
+    @Override
+    void removeTagsFromPost(PostDTO postDTO) {
+        Post postEntity = postService.getOne(postDTO.getId())
+        postEntity.getTags().each {
+            Tags tag ->
+                delete(tag.getId())
+                saveAndFlush(tag)
+        }
     }
 
     @Override
@@ -80,10 +83,12 @@ class TagsServiceImplementation extends BaseServiceImplementation<Tags, Long, Ta
     }
 
     @Override
-    boolean isTagPresent(TagsDTO tagsDTO) {
-        if (getTagByName(tagsDTO.getTag()))
-            return true
+    Tags getTagById(Long id) {
+        Optional<Tags> optionalTag = tagsRepository.findById(id)
+        if (optionalTag.isPresent())
+            return optionalTag.get()
         else
-            return false
+            return null
     }
+
 }
