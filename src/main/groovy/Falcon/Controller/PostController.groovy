@@ -119,8 +119,9 @@ class PostController {
         Long userId = userService.getUserByName(authentication.getName()).getId()
 
         def tagsString = tagsService.getPostTagsAsString(postId)
-        model.addAttribute("tags", new TagsDTO())
-        model.addAttribute("tag", tagsString)
+        println("For delete ${tagsString}")
+        TagsDTO tag =  new TagsDTO(tagsString)
+        model.addAttribute("tags", tag)
         model.addAttribute("username", authentication.getName())
         model.addAttribute("userId", userId )
         model.addAttribute("postId", postId)

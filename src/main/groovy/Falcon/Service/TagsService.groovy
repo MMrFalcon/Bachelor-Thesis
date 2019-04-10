@@ -10,5 +10,7 @@ interface TagsService extends BaseService <Tags, Long, TagsRepository> {
         String getPostTagsAsString(Long postId)
         void removeTagsFromPost(PostDTO postDTO)
         TagsDTO getTagByName(String tag)
-        Tags getTagById(Long id)
+        TagsDTO getTagById(Long id)
+        Tags getTagEntityByName(String tag)
+        boolean isPresent(String tag)
 }

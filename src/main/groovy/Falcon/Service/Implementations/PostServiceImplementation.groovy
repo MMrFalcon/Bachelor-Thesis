@@ -3,8 +3,8 @@ package Falcon.Service.Implementations
 import Falcon.Model.PostDTO
 import Falcon.Model.TagsDTO
 import Falcon.Model.UserDTO
-import Falcon.Persist.BaseEntity
 import Falcon.Persist.Post
+import Falcon.Persist.Tags
 import Falcon.Persist.User
 import Falcon.Repository.PostRepository
 import Falcon.Service.PostService
@@ -57,10 +57,23 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
 
             tagsDTOs.each {
                 TagsDTO tagsDTO ->
-                        BaseEntity baseEntity = tagsService.saveAndFlush(Mapper.dtoToTags(tagsDTO))
-                        println("Adding tag to post: ${tagsService.getTagById(baseEntity.getId())}")
-                        postEntity.getTags().add(tagsService.getTagById(baseEntity.getId()))
+                    if (tagsService.isPresent(tagsDTO.getTag())) {
+                        println("Adding Post to existing tag")
+                        Tags tag = tagsService.getTagEntityByName(tagsDTO.getTag())
+                        postEntity.getTags().add(tag)
                         saveAndFlush(postEntity)
+                        tag.getPosts().add(postEntity)
+                        tagsService.saveAndFlush(tag)
+                    }else {
+                        Tags tag = tagsService.saveAndFlush(Mapper.dtoToTags(tagsDTO))
+                        println("Adding tag to post: ${tag}")
+                        postEntity.getTags().add(tag)
+                        saveAndFlush(postEntity)
+                        tag.getPosts().add(postEntity)
+                        tagsService.saveAndFlush(tag)
+                    }
+
+
             }
 
             saveAndFlush(postEntity)
@@ -89,10 +102,22 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
         saveAndFlush(postEntity)
         tagsDTOs.each {
             TagsDTO tagsDTO ->
-                BaseEntity baseEntity = tagsService.saveAndFlush(Mapper.dtoToTags(tagsDTO))
-                println("Adding tag to post: ${tagsService.getTagById(baseEntity.getId())}")
-                postEntity.getTags().add(tagsService.getTagById(baseEntity.getId()))
-                saveAndFlush(postEntity)
+                if (tagsService.isPresent(tagsDTO.getTag())) {
+                    println("Adding Post to existing tag")
+                    Tags tag = tagsService.getTagEntityByName(tagsDTO.getTag())
+                    postEntity.getTags().add(tag)
+                    saveAndFlush(postEntity)
+                    tag.getPosts().add(postEntity)
+                    tagsService.saveAndFlush(tag)
+                }else {
+                    Tags tag = tagsService.saveAndFlush(Mapper.dtoToTags(tagsDTO))
+                    println("Adding tag to post: ${tag}")
+                    postEntity.getTags().add(tag)
+                    saveAndFlush(postEntity)
+                    tag.getPosts().add(postEntity)
+                    tagsService.saveAndFlush(tag)
+                }
+
         }
 
         saveAndFlush(postEntity)

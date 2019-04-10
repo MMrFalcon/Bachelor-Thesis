@@ -49,7 +49,7 @@
 
             <div class="form-group">
                 <label for="tagsContent">Enter tags here, for example: <br/>Java Spring Spring-Boot</label>
-                <textarea class="form-control" rows="5" id="tagsContent" th:field="*{tag}">
+                <textarea class="form-control" rows="5" id="tagsContent" th:field="${tags.tag}">
                     </textarea>
                 <p th:if="${#fields.hasErrors('tag')}" th:errors="*{tag}">Name of Error</p>
             </div>

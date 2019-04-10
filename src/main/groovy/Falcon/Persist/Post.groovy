@@ -29,7 +29,6 @@ class Post extends BaseEntity {
     @ManyToMany
     @JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "tags_id", referencedColumnName = "id"))
-//    Set<Tags> tags = new HashSet<>()
       private Set<Tags> tags = new HashSet<>()
 
     Set<Tags> getTags() {
@@ -39,13 +38,6 @@ class Post extends BaseEntity {
     void setTags(Set<Tags> tags) {
         this.tags = tags
     }
-//    List<Tags> getTags() {
-//        return tags
-//    }
-//
-//    void setTags(List<Tags> tags) {
-//        this.tags = tags
-//    }
 
     User getUser() {
         return user

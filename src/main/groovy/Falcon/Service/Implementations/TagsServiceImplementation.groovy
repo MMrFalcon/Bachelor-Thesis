@@ -10,6 +10,8 @@ import Falcon.Service.TagsService
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
 
+import javax.persistence.EntityNotFoundException
+
 @Service
 class TagsServiceImplementation extends BaseServiceImplementation<Tags, Long, TagsRepository> implements  TagsService {
 
@@ -25,12 +27,6 @@ class TagsServiceImplementation extends BaseServiceImplementation<Tags, Long, Ta
     TagsRepository getRepository() {
         tagsRepository
     }
-
-    @Override
-    Tags saveAndFlush(Tags tagsEntity) {
-        return tagsRepository.saveAndFlush(tagsEntity)
-    }
-
 
     @Override
     Set<TagsDTO> generateTags(String tags, PostDTO postDTO) {
@@ -68,7 +64,7 @@ class TagsServiceImplementation extends BaseServiceImplementation<Tags, Long, Ta
         Post postEntity = postService.getOne(postDTO.getId())
         postEntity.getTags().each {
             Tags tag ->
-                delete(tag.getId())
+                tag.getPosts().remove(postEntity)
                 saveAndFlush(tag)
         }
     }
@@ -83,12 +79,28 @@ class TagsServiceImplementation extends BaseServiceImplementation<Tags, Long, Ta
     }
 
     @Override
-    Tags getTagById(Long id) {
-        Optional<Tags> optionalTag = tagsRepository.findById(id)
-        if (optionalTag.isPresent())
-            return optionalTag.get()
+    TagsDTO getTagById(Long id) {
+        Tags tag = getOne(id)
+        if (tag)
+            return Mapper.tagsToDTO(tag)
         else
             return null
     }
 
+    @Override
+    Tags getTagEntityByName(String tag) {
+        Optional<Tags> optionalTag = getRepository().findByTag(tag)
+        if (optionalTag.isPresent())
+            return optionalTag.get()
+        else
+            throw new EntityNotFoundException("Cannot find tag Entity")
+    }
+
+    @Override
+    boolean isPresent(String tag) {
+        if(getTagByName(tag))
+            return true
+        else
+            return false
+    }
 }
