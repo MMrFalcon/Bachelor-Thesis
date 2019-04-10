@@ -65,7 +65,6 @@
 
                 <div class="postContent">
                 <h2 th:text="${post.title}"></h2>
-                    <h2 th:text="${post.id}"></h2>
                 <p th:text="${post.content}"></p>
                 </div>
 
@@ -84,7 +83,7 @@
 
 
                 <th:block th:each="oneTag : ${post.tags}">
-                        <button type="button" class="btn btn-outline-dark btn-sm"><p th:text="${oneTag.tag} +' '+ ${oneTag.id}"></p></button>
+                        <button type="button" class="btn btn-outline-dark btn-sm"><p th:text="${oneTag.tag}"></p></button>
                 </th:block>
 
 

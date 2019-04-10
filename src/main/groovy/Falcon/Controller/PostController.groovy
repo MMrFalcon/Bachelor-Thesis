@@ -86,7 +86,7 @@ class PostController {
 
         model.addAttribute("posts", postService.getAll().toList().reverse())
         model.addAttribute("username", authentication.getName())
-        model.addAttribute("userId", userId ) // for delete
+        model.addAttribute("userId", userId )
         model.addAttribute("tags", tagsService.getAll().toList())
 
         return "post/posts"
@@ -119,7 +119,6 @@ class PostController {
         Long userId = userService.getUserByName(authentication.getName()).getId()
 
         def tagsString = tagsService.getPostTagsAsString(postId)
-        println("For delete ${tagsString}")
         TagsDTO tag =  new TagsDTO(tagsString)
         model.addAttribute("tags", tag)
         model.addAttribute("username", authentication.getName())

@@ -4,17 +4,18 @@ import Falcon.Model.UserDTO
 import Falcon.Persist.User
 import Falcon.Repository.UserRepository
 import Falcon.Service.UserService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
 class UserServiceImplementation extends BaseServiceImplementation<User, Long, UserRepository> implements UserService {
 
-    @Autowired
-    private UserRepository userRepository
 
-    @Override
-    UserRepository getRepository() { userRepository }
+    private final UserRepository userRepository
+
+    UserServiceImplementation(UserRepository userRepository) {
+        this.userRepository = userRepository
+        super.setRepository(userRepository)
+    }
 
     @Override
     UserDTO createUser(UserDTO userDTO) {
@@ -22,6 +23,7 @@ class UserServiceImplementation extends BaseServiceImplementation<User, Long, Us
             throw new NullPointerException("You are trying to save an empty Object!")
         else {
             User user = save(Mapper.dtoToUser(userDTO))
+            println("New user ${userRepository.getOne(user.getId())} is created")
             return Mapper.userToDTO(user)
         }
     }
@@ -42,7 +44,9 @@ class UserServiceImplementation extends BaseServiceImplementation<User, Long, Us
         try {
             User userEntity =  userRepository.findByUsername(username)
             userEntity.setPoints(userEntity.getPoints() + points)
+            println("Adding ${points} point/s to user ${userRepository.getOne(userEntity.getId())}")
             saveAndFlush(userEntity)
+            println("User ${userRepository.getOne(userEntity.getId())} points after successfully flashing operation ${userEntity.getPoints()}")
         }catch(Exception ex) {
             println(ex)
         }

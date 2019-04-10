@@ -14,19 +14,19 @@ import org.springframework.context.annotation.Lazy
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 
-import javax.transaction.Transactional
 
 @Service
 class PostServiceImplementation extends BaseServiceImplementation<Post, Long, PostRepository> implements PostService {
 
-    private PostRepository postRepository
-    private UserService userService
-    private TagsService tagsService
+    private final PostRepository postRepository
+    private final UserService userService
+    private final TagsService tagsService
 
-    PostServiceImplementation(UserService userService, @Lazy TagsService tagsService, PostRepository postRepository) {
+    protected PostServiceImplementation(UserService userService, @Lazy TagsService tagsService, PostRepository postRepository) {
         this.userService = userService
         this.tagsService = tagsService
         this.postRepository = postRepository
+        super.setRepository(postRepository)
     }
 
 
@@ -34,13 +34,13 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
     PostDTO createPost(PostDTO postDTO, UserDTO userDTO) {
         Post postEntity = Mapper.dtoToPost(postDTO)
         User user = userService.getOne(userDTO.getId())
-
+        println("User ${user} starts creation of new Post")
         if (user) {
             postEntity.setUser(user)
         }else {
             throw new UsernameNotFoundException("User name is missing")
         }
-
+        println("Post entity is ready for Tagging - ${postEntity}")
         return Mapper.postToDto(save(postEntity))
     }
 
@@ -58,15 +58,15 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
             tagsDTOs.each {
                 TagsDTO tagsDTO ->
                     if (tagsService.isPresent(tagsDTO.getTag())) {
-                        println("Adding Post to existing tag")
                         Tags tag = tagsService.getTagEntityByName(tagsDTO.getTag())
+                        println("Adding Post ${postEntity} to existing tag ${tag}")
                         postEntity.getTags().add(tag)
                         saveAndFlush(postEntity)
                         tag.getPosts().add(postEntity)
                         tagsService.saveAndFlush(tag)
                     }else {
                         Tags tag = tagsService.saveAndFlush(Mapper.dtoToTags(tagsDTO))
-                        println("Adding tag to post: ${tag}")
+                        println("Adding tag - ${tag} to post: ${postEntity}")
                         postEntity.getTags().add(tag)
                         saveAndFlush(postEntity)
                         tag.getPosts().add(postEntity)
@@ -85,7 +85,6 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
 
     }
 
-//    @Transactional
     @Override
     PostDTO updatePostTags(Long postId, Set<TagsDTO> tagsDTOs) {
 
@@ -111,7 +110,7 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
                     tagsService.saveAndFlush(tag)
                 }else {
                     Tags tag = tagsService.saveAndFlush(Mapper.dtoToTags(tagsDTO))
-                    println("Adding tag to post: ${tag}")
+                    println("Adding tag to post: ${postEntity}")
                     postEntity.getTags().add(tag)
                     saveAndFlush(postEntity)
                     tag.getPosts().add(postEntity)
@@ -121,7 +120,7 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
         }
 
         saveAndFlush(postEntity)
-        println("List of tags size after flashing Post entity: ${postEntity.getTags().size()}")
+        println("List of tags size after flashing update Post entity: ${postEntity.getTags().size()}")
 
         return Mapper.postToDto(postEntity)
     }
@@ -131,7 +130,6 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
         return Mapper.postToDto(getOne(id))
     }
 
-    @Transactional
     @Override
     PostDTO updatePost(Long id, PostDTO postDTO) {
 
@@ -150,8 +148,4 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
         return Mapper.postToDto(save(postEntity))
     }
 
-    @Override
-    PostRepository getRepository() {
-        return this.postRepository
-    }
 }

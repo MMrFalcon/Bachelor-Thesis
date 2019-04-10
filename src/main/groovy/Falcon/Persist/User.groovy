@@ -1,6 +1,6 @@
 package Falcon.Persist
 
-import groovy.transform.Canonical
+
 import groovy.transform.EqualsAndHashCode
 
 import javax.persistence.*
@@ -9,7 +9,6 @@ import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
 @EqualsAndHashCode(callSuper = true)
-@Canonical
 @Entity
 @Table(name="users")
 class User extends BaseEntity {

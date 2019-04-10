@@ -15,17 +15,13 @@ import javax.persistence.EntityNotFoundException
 @Service
 class TagsServiceImplementation extends BaseServiceImplementation<Tags, Long, TagsRepository> implements  TagsService {
 
-    private TagsRepository tagsRepository
-    private PostService postService
+    private final TagsRepository tagsRepository
+    private final PostService postService
 
     TagsServiceImplementation(TagsRepository tagsRepository, @Lazy PostService postService) {
         this.tagsRepository = tagsRepository
         this.postService = postService
-    }
-
-    @Override
-    TagsRepository getRepository() {
-        tagsRepository
+        super.setRepository(tagsRepository)
     }
 
     @Override
@@ -89,7 +85,7 @@ class TagsServiceImplementation extends BaseServiceImplementation<Tags, Long, Ta
 
     @Override
     Tags getTagEntityByName(String tag) {
-        Optional<Tags> optionalTag = getRepository().findByTag(tag)
+        Optional<Tags> optionalTag = tagsRepository.findByTag(tag)
         if (optionalTag.isPresent())
             return optionalTag.get()
         else

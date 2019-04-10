@@ -19,7 +19,7 @@ class UserDetailsServiceImpl implements UserDetailsService {
     PasswordEncoder passwordEncoder
 
     UserDetailsServiceImpl() { super() }
-    Mapper mapper = new Mapper()
+
 
     @Override
     UserDetails loadUserByUsername(String nameOfUser) throws UsernameNotFoundException {

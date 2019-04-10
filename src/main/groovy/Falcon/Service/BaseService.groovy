@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface BaseService <T extends BaseEntity, K extends Serializable, R extends JpaRepository<T, K>> {
 
-    R getRepository()
+//    R getRepository()
 
     T save(T entity)
 
