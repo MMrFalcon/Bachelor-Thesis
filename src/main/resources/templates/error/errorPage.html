@@ -23,7 +23,7 @@
             <div class= "col-12">
                 <!-- IF CUSTOMER IS ANONYMOUS -->
                 <div th:if="${auth}">
-                    <a th:href="@{/user/panel}" class="btn btn-outline-success text-center" role="button">Go back Home</a>
+                    <a th:href="@{/user/panel/}+${userId}" class="btn btn-outline-success text-center" role="button">Go back Home</a>
                 </div>
                 <!-- ELSE -->
                 <div th:unless="${auth}">
