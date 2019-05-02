@@ -1,12 +1,14 @@
 package Falcon.Controller
 
+import Falcon.Exceptions.DuplicateEmailException
+import Falcon.Exceptions.DuplicateUsernameException
 import Falcon.Model.UserDTO
 import Falcon.Service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 
@@ -18,24 +20,31 @@ class RegisterController {
     @Autowired
     UserService userService
 
-    @ModelAttribute('user') //th:object
-    UserDTO user(){
-        new UserDTO()
-    }
-
     @GetMapping("/registration")
-    def getRegisterPage(){
+    def getRegisterPage(UserDTO userDTO) {
         return "user/registerPage"
     }
 
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    def processRegister(@ModelAttribute('user') @Valid UserDTO userRegistrationObject, BindingResult bindingResult) {
+    def processRegister(@Valid UserDTO userDTO, BindingResult bindingResult, Model model) {
 
-        if(bindingResult.hasErrors())
-            return "registerPage"
+        if (bindingResult.hasErrors()) {
+            return "user/registerPage"
+        }
 
-        userService.createUser(userRegistrationObject)
+        try {
+            userService.createUser(userDTO)
+        } catch(DuplicateUsernameException exception) {
+            model.addAttribute("userExist", true)
+            model.addAttribute("userDTO", new UserDTO())
+            return "user/registerPage"
+        } catch (DuplicateEmailException exception) {
+            model.addAttribute("emailExist", true)
+            model.addAttribute("userDTO", new UserDTO())
+            return "user/registerPage"
+        }
+
 
         return "redirect:/index"
     }

@@ -7,6 +7,7 @@ import javax.persistence.*
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
+import javax.validation.constraints.Size
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -16,11 +17,13 @@ class User extends BaseEntity {
     @Column(unique = true, name="username")
     @NotNull
     @NotEmpty
+    @Size(min=5, max=25)
     private String username
 
     @NotNull
     @NotEmpty
     @Column(name="password")
+    @Size(min=9, max=25)
     private String password
 
     @Email

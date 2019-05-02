@@ -24,7 +24,8 @@
 
                     <div class="panel panel-body col-12">
                         <!-- Form register -->
-                        <form  method="post" action="#" th:object="${user}" th:action="@{/registration}">
+                        <!--/*@thymesVar id="post" type="Falcon.Model.UserDTO"*/-->
+                        <form  method="post" action="#" th:object="${userDTO}" th:action="@{/registration}">
                             <h2 class="text-center font-up font-bold ">Sign up</h2>
                             <br/>
 
@@ -33,7 +34,9 @@
                                 <i class="fa fa-user icons col-1"></i>
                                 <label for="nick" class="col-4">Your name</label>
                                 <input type="text" id="nick" class="form-control col-7" th:field="*{username}">
-                                <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Name Error</p>
+                                <span class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+                                <span class="text-danger" th:if="${userExist}" th:text="'User already exist'"></span>
+
                             </div>
                             <br/>
 
@@ -41,7 +44,9 @@
                                 <i class="fa fa-envelope icons col-1"></i>
                                 <label for="email" class="col-4">Your email</label>
                                 <input type="text" id="email" class="form-control col-7" th:field="*{email}">
-                                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Name Error</p>
+                                <span class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                                <span class="text-danger" th:if="${emailExist}" th:text="'Email already exist'"></span>
+
                             </div>
                             <br/>
 
@@ -49,7 +54,7 @@
                                 <i class="fa fa-lock icons col-1"></i>
                                 <label for="password" class="col-4">Your password</label>
                                 <input type="password" id="password" class="form-control col-7" th:field="*{password}">
-                                <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Name Error</p>
+                                <span class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
                             </div>
                             <br/>
 

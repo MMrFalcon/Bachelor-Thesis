@@ -5,5 +5,5 @@ import Falcon.Persist.User
 
 interface UserRepository extends BaseRepository<User, Long> {
     User findByUsername(String username)
-    User findByEmail(String email) //FIXME ?
+    User findByEmail(String email)
 }

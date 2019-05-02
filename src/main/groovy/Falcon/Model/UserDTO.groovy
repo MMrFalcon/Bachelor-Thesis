@@ -2,12 +2,31 @@ package Falcon.Model
 
 import groovy.transform.Canonical
 
+import javax.persistence.Column
+import javax.validation.constraints.Email
+import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Size
+
 @Canonical
 class UserDTO {
 
     private Long id
+
+    @NotNull
+    @NotEmpty
+    @Size(min=5, max=25)
     private String username
+
+    @NotNull
+    @NotEmpty
+    @Size(min=9, max=25)
     private String password
+
+    @Email
+    @NotNull
+    @NotEmpty
+    @Column(unique = true, name="email")
     private String email
     private Long points
     private boolean active

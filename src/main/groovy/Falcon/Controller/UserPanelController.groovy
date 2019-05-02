@@ -14,13 +14,17 @@ import org.springframework.web.bind.annotation.RequestMethod
 class UserPanelController {
 
     @Autowired
-//    UserRepository userRepository
     UserService userService
 
     @RequestMapping(value = "user/panel/{userId}", method = RequestMethod.GET)
     def returnUserPanel(Authentication authentication, Model model, @PathVariable Long userId) {
 
-        model.addAttribute("username", authentication.getName())
+        try {
+            model.addAttribute("username", authentication.getName())
+        }catch (NullPointerException exception) {  // FIXME  add slf4j log
+            return "home/index"
+        }
+
 
         UserDTO user = userService.getUserByName(authentication.getName())
 

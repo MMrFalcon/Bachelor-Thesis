@@ -10,7 +10,7 @@ import org.modelmapper.ModelMapper
 
 class Mapper {
 
-    static userToDTO(User user) {
+    static UserDTO userToDTO(User user) {
         ModelMapper modelMapper = new ModelMapper()
         return modelMapper.map(user, UserDTO)
     }

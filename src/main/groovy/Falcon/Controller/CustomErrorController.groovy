@@ -30,7 +30,7 @@ class CustomErrorController implements ErrorController {
             model.addAttribute("exception", exception.getMessage())
         }
 
-        if (authentication) {
+        if (authentication != null) {
             model.addAttribute("auth", authentication)
             model.addAttribute("userId", userService.getUserByName(authentication.getName()).getId())
         }
