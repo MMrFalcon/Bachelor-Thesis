@@ -10,11 +10,12 @@ import Falcon.Repository.PostRepository
 import Falcon.Service.PostService
 import Falcon.Service.TagsService
 import Falcon.Service.UserService
+import groovy.util.logging.Slf4j
 import org.springframework.context.annotation.Lazy
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 
-
+@Slf4j
 @Service
 class PostServiceImplementation extends BaseServiceImplementation<Post, Long, PostRepository> implements PostService {
 
@@ -34,13 +35,13 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
     PostDTO createPost(PostDTO postDTO, UserDTO userDTO) {
         Post postEntity = Mapper.dtoToPost(postDTO)
         User user = userService.getOne(userDTO.getId())
-        println("User ${user} starts creation of new Post")
+        log.info("User ${user.getUsername()} starts creation of new Post")
         if (user) {
             postEntity.setUser(user)
         }else {
             throw new UsernameNotFoundException("User name is missing")
         }
-        println("Post entity is ready for Tagging - ${postEntity}")
+        log.info("Post entity is ready for Tagging - ${postEntity}")
         return Mapper.postToDto(save(postEntity))
     }
 
@@ -59,14 +60,14 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
                 TagsDTO tagsDTO ->
                     if (tagsService.isPresent(tagsDTO.getTag())) {
                         Tags tag = tagsService.getTagEntityByName(tagsDTO.getTag())
-                        println("Adding Post ${postEntity} to existing tag ${tag}")
+                        log.info("Adding Post ${postEntity} to existing tag ${tag}")
                         postEntity.getTags().add(tag)
                         saveAndFlush(postEntity)
                         tag.getPosts().add(postEntity)
                         tagsService.saveAndFlush(tag)
                     }else {
                         Tags tag = tagsService.saveAndFlush(Mapper.dtoToTags(tagsDTO))
-                        println("Adding tag - ${tag} to post: ${postEntity}")
+                        log.info("Adding tag - ${tag} to post: ${postEntity}")
                         postEntity.getTags().add(tag)
                         saveAndFlush(postEntity)
                         tag.getPosts().add(postEntity)
@@ -77,7 +78,7 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
             }
 
             saveAndFlush(postEntity)
-            println("List of tags size after flashing Post entity: ${postEntity.getTags().size()}")
+            log.info("Tags list size after flashing Post entity: ${postEntity.getTags().size()}")
 
             return Mapper.postToDto(postEntity)
 
@@ -102,7 +103,7 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
         tagsDTOs.each {
             TagsDTO tagsDTO ->
                 if (tagsService.isPresent(tagsDTO.getTag())) {
-                    println("Adding Post to existing tag")
+                    log.info("Adding Post to existing tag")
                     Tags tag = tagsService.getTagEntityByName(tagsDTO.getTag())
                     postEntity.getTags().add(tag)
                     saveAndFlush(postEntity)
@@ -110,7 +111,7 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
                     tagsService.saveAndFlush(tag)
                 }else {
                     Tags tag = tagsService.saveAndFlush(Mapper.dtoToTags(tagsDTO))
-                    println("Adding tag to post: ${postEntity}")
+                    log.info("Adding tag to post: ${postEntity}")
                     postEntity.getTags().add(tag)
                     saveAndFlush(postEntity)
                     tag.getPosts().add(postEntity)
@@ -120,14 +121,16 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
         }
 
         saveAndFlush(postEntity)
-        println("List of tags size after flashing update Post entity: ${postEntity.getTags().size()}")
+        log.info("Tags list size after flashing Post entity: ${postEntity.getTags().size()}")
 
         return Mapper.postToDto(postEntity)
     }
 
     @Override
     PostDTO getPostDtoById(Long id) {
-        return Mapper.postToDto(getOne(id))
+        log.info("Searching for post with id ${id}")
+        Post post = getOne(id)
+        return Mapper.postToDto(post)
     }
 
     @Override
@@ -136,6 +139,7 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
         if (id == null)
             throw new NullPointerException("Bad ID!")
 
+        log.info("Searching for post with id ${id}")
         Post postEntity = getOne(id)
 
         if (PostDTO == null)
@@ -145,7 +149,9 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
         postEntity.setContent(postDTO.getContent())
         postEntity.setUpdatedDate(new Date())
 
-        return Mapper.postToDto(save(postEntity))
+        Post savedPost = save(postEntity)
+        log.info("Post with id ${id} successfully updated")
+        return Mapper.postToDto(savedPost)
     }
 
 }

@@ -7,9 +7,11 @@ import Falcon.Model.UserDTO
 import Falcon.Persist.User
 import Falcon.Repository.UserRepository
 import Falcon.Service.UserService
+import groovy.util.logging.Slf4j
 import org.postgresql.util.PSQLState
 import org.springframework.stereotype.Service
 
+@Slf4j
 @Service
 class UserServiceImplementation extends BaseServiceImplementation<User, Long, UserRepository> implements UserService {
 
@@ -31,17 +33,17 @@ class UserServiceImplementation extends BaseServiceImplementation<User, Long, Us
                 UserDTO user = getUserByName(userDTO.getUsername())
                 throw new DuplicateUsernameException("User ${user.username} already exist", PSQLState.DATA_ERROR)
             } catch (UserNotFoundException exception) {
-                //fixme loger here
+                log.error(exception.getMessage(), exception)
             }
             try {
                 UserDTO user = getUserByEmail(userDTO.getEmail())
                 throw new DuplicateEmailException("Email already exist", PSQLState.DATA_ERROR)
             } catch (UserNotFoundException exception) {
-                //fixme loger here
+                log.error(exception.getMessage(), exception)
             }
 
             User user = save(Mapper.dtoToUser(userDTO))
-            println("New user ${userRepository.getOne(user.getId())} is created")
+            log.info("New user with id ${userRepository.getOne(user.getId())} was created")
             return Mapper.userToDTO(user)
         }
     }
@@ -77,11 +79,11 @@ class UserServiceImplementation extends BaseServiceImplementation<User, Long, Us
         try {
             User userEntity = userRepository.findByUsername(username)
             userEntity.setPoints(userEntity.getPoints() + points)
-            println("Adding ${points} point/s to user ${userRepository.getOne(userEntity.getId())}")
+            log.info("Adding ${points} point/s to user ${userRepository.getOne(userEntity.getId())}")
             saveAndFlush(userEntity)
-            println("User ${userRepository.getOne(userEntity.getId())} points after successfully flashing operation ${userEntity.getPoints()}")
+            log.info("User ${userRepository.getOne(userEntity.getId())} points after successfully flashing operation ${userEntity.getPoints()}")
         } catch (Exception ex) {
-            println(ex)
+            log.error(ex.getMessage(),ex)
         }
     }
 }
