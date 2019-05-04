@@ -38,17 +38,11 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-
-        //now access  to creator and posts need authentication
-        //if user isn't authenticated application redirect user to login page
-        http.authorizeRequests().antMatchers("/creator","/posts","user/panel","error/errorPage")
+        http.authorizeRequests().antMatchers("/creator","/posts","/user/panel/**","/error/errorPage")
                 .hasAnyAuthority("READ_AUTHORITY","WRITE_PRIVILEGE")
                 .and()
                 .formLogin()
-                .loginPage("/login") //custom login page
-                //.loginProcessingUrl("/login_processing")
-                // we are in charge of rendering a failure page when /login?error is requested
-//                .failureUrl("/loginUser?error=error")
+                .loginPage("/login")
                 .failureUrl("/login")
                 .defaultSuccessUrl("/posts", true)
                 .and().logout()
