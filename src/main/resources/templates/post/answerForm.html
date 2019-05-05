@@ -1,0 +1,68 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Posts</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"
+          th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css} ">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+<nav th:replace="fragments/header :: header"></nav>
+
+<div class="jumbotron d-flex align-items-center">
+    <div class="container">
+        <!--/*@thymesVar id="post" type="Falcon.Model.PostDTO"*/-->
+        <div class="card text-center" th:object="${post}">
+            <div class="card-header" th:text="${author}">
+                UserName
+            </div>
+            <div class="card-body">
+                <div class="d-inline float-left">
+                    <a th:href="@{/edit/}+${post.id}">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                </div>
+
+
+                <div th:if="${delete}" class="d-inline float-right">
+                    <a th:if="${delete}" th:href="@{/delete/}+${post.id}">
+                        <i th:if="${delete}" class="fa fa-close"></i>
+                    </a>
+                </div>
+                <h5 class="card-title" th:text="${post.title}">Title</h5>
+                <p class="card-text" th:text="${post.content}">Content</p>
+            </div>
+            <div class="card-footer text-muted">
+
+                <div class="d-inline float-right">
+                    <small th:text="'Created: ' + ${#dates.format(post.created, 'dd-MM-yyyy HH:mm')}"></small>
+                </div>
+
+                <div class="d-inline float-left">
+                    <small th:text="'Last update: ' + ${#dates.format(post.updated, 'dd-MM-yyyy HH:mm')}"></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form method="post" action="#" th:object="${comment}" th:action="@{'/posts/post/'}+${postId}">
+            <div class="form-group ">
+                <label for="answer">Answer</label>
+                <textarea class="form-control" id="answer" rows="3"></textarea>
+            </div>
+            <input type="submit" value="Submit" class="btn btn-primary"/>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
