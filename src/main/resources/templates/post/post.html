@@ -25,9 +25,9 @@
                 UserName
             </div>
             <div class="card-body">
-                <div class="d-inline float-left">
-                    <a th:href="@{/edit/}+${post.id}">
-                        <i class="fa fa-edit"></i>
+                <div th:if="${edit}" class="d-inline float-left">
+                    <a th:if="${edit}" th:href="@{/edit/}+${post.id}">
+                        <i th:if="${edit}" class="fa fa-edit"></i>
                     </a>
                 </div>
 

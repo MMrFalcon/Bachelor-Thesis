@@ -176,5 +176,6 @@ class PostController {
         model.addAttribute("author", postService.getAuthorName(post))
         model.addAttribute("delete", deletable)
         model.addAttribute("edit", editable)
+        return "post/answerForm"
     }
 }
