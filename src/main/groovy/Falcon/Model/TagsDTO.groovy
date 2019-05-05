@@ -1,8 +1,11 @@
 package Falcon.Model
 
+import javax.validation.constraints.Size
+
 class TagsDTO {
 
     private Long id
+    @Size(min=2)
     private String tag
 
     TagsDTO(){}

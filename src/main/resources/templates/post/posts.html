@@ -24,9 +24,11 @@
                        class="btn btn-primary btn-lg btn-block">Post</a>
                 </div>
                 <div class="card-body">
-                    <div class="row">
+                    <div class="d-flex bd-highlight mb-1">
                         <th:block th:each="oneTag : ${post.tags}">
-                            <h5 class="card-text" th:text="${oneTag.tag}+'&nbsp;'">tags </h5>
+                            <div class="p-2 bd-highlight">
+                                <h5 class="card-text" th:text="${oneTag.tag}+'&nbsp;'">tags </h5>
+                            </div>
                         </th:block>
                     </div>
                 </div>

@@ -25,18 +25,6 @@
                 UserName
             </div>
             <div class="card-body">
-                <div class="d-inline float-left">
-                    <a th:href="@{/edit/}+${post.id}">
-                        <i class="fa fa-edit"></i>
-                    </a>
-                </div>
-
-
-                <div th:if="${delete}" class="d-inline float-right">
-                    <a th:if="${delete}" th:href="@{/delete/}+${post.id}">
-                        <i th:if="${delete}" class="fa fa-close"></i>
-                    </a>
-                </div>
                 <h5 class="card-title" th:text="${post.title}">Title</h5>
                 <p class="card-text" th:text="${post.content}">Content</p>
             </div>
@@ -51,16 +39,32 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="container">
-        <form method="post" action="#" th:object="${comment}" th:action="@{'/posts/post/'}+${postId}">
-            <div class="form-group ">
-                <label for="answer">Answer</label>
-                <textarea class="form-control" id="answer" rows="3"></textarea>
+        <!--/*@thymesVar id="answers" type="Falcon.Model.CommentsDTO"*/-->
+        <th:block th:each="answer:${answers}">
+            <div class="card">
+                <div class="card-header" th:text="${author}">
+                    Author
+                </div>
+                <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                        <p th:text="${answer.commentMessage}">Comment</p>
+                    </blockquote>
+                </div>
             </div>
-            <input type="submit" value="Submit" class="btn btn-primary"/>
+        </th:block>
+
+
+        <!--/*@thymesVar id="comment" type="Falcon.Model.CommentsDTO"*/-->
+        <form method="post" action="#" th:object="${comment}" th:action="@{'/posts/post/'}+${postId}+'/answer'">
+            <div class="form-group ">
+                <label for="commentMessage">Answer</label>
+                <textarea class="form-control" id="commentMessage" rows="3" th:field="*{commentMessage}"></textarea>
+                <p th:if="${#fields.hasErrors('commentMessage')}" th:errors="*{commentMessage}">Name of Error</p>
+            </div>
+            <input type="submit" value="Submit" class="btn btn-primary btn-lg btn-block"/>
         </form>
+        <a th:href="@{'/posts/post/'}+${postId}" th:text="'Back to Post'" class="btn btn-outline-warning btn-lg btn-block"> </a>
     </div>
 </div>
 

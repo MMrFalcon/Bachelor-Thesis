@@ -25,21 +25,8 @@
                 UserName
             </div>
             <div class="card-body">
-                <div th:if="${edit}" class="d-inline float-left">
-                    <a th:if="${edit}" th:href="@{/edit/}+${post.id}">
-                        <i th:if="${edit}" class="fa fa-edit"></i>
-                    </a>
-                </div>
-
-
-                <div th:if="${delete}" class="d-inline float-right">
-                    <a th:if="${delete}" th:href="@{/delete/}+${post.id}">
-                        <i th:if="${delete}" class="fa fa-close"></i>
-                    </a>
-                </div>
                 <h5 class="card-title" th:text="${post.title}">Title</h5>
                 <p class="card-text" th:text="${post.content}">Content</p>
-                <a th:href="@{'/posts/post/'}+${post.id}+'/answer'" class="btn btn-primary">Add comment</a>
             </div>
             <div class="card-footer text-muted">
 
@@ -53,33 +40,11 @@
             </div>
         </div>
 
-        <!--/*@thymesVar id="answers" type="Falcon.Persist.Comments"*/-->
+        <!--/*@thymesVar id="answers" type="Falcon.Model.CommentsDTO"*/-->
         <th:block th:each="answer:${answers}">
-            <div class="card mt-2">
-                <div class="card-header">
-                    <div class="d-flex mb-1">
-                        <div class="mr-auto p-2">
-                            <h5 th:text="${answer.user.username}"></h5>
-                        </div>
-
-                        <div class="p-2">
-                            <div th:if="${answer.user.username}==${username}" class="d-inline float-left">
-                                <a th:if="${answer.user.username}==${username}"
-                                   th:href="@{'/posts/post/'}+${postId}+'/answer/'+${answer.id}+'/edit'">
-                                    <i th:if="${answer.user.username}==${username}" class="fa fa-edit"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex mb-1">
-                        <div class="mr-auto p-2 text-muted">
-                            <small th:text="'Created: ' + ${#dates.format(answer.createdDate, 'dd-MM-yyyy HH:mm')}"></small>
-                        </div>
-
-                        <div class="p-2 text-muted">
-                            <small th:text="'Last update: ' + ${#dates.format(answer.updatedDate, 'dd-MM-yyyy HH:mm')}"></small>
-                        </div>
-                    </div>
+            <div class="card">
+                <div class="card-header" th:text="${author}">
+                    Author
                 </div>
                 <div class="card-body">
                     <blockquote class="blockquote mb-0">
@@ -88,6 +53,18 @@
                 </div>
             </div>
         </th:block>
+
+
+        <!--/*@thymesVar id="comment" type="Falcon.Model.CommentsDTO"*/-->
+        <form method="post" action="#" th:object="${comment}" th:action="@{'/posts/post/'}+${postId}+'/answer/'+${answerId}+'/edit'">
+            <div class="form-group ">
+                <label for="commentMessage">Answer</label>
+                <textarea class="form-control" id="commentMessage" rows="3" th:field="*{commentMessage}"></textarea>
+                <p th:if="${#fields.hasErrors('commentMessage')}" th:errors="*{commentMessage}">Name of Error</p>
+            </div>
+            <input type="submit" value="Submit" class="btn btn-primary btn-lg btn-block"/>
+        </form>
+        <a th:href="@{'/posts/post/'}+${postId}" th:text="'Back to Post'" class="btn btn-outline-warning btn-lg btn-block"> </a>
     </div>
 </div>
 

@@ -2,6 +2,7 @@ package Falcon.Controller
 
 import Falcon.Model.PostDTO
 import Falcon.Model.TagsDTO
+import Falcon.Service.CommentsService
 import Falcon.Service.PostService
 import Falcon.Service.TagsService
 import Falcon.Service.UserService
@@ -19,14 +20,17 @@ import javax.validation.Valid
 @Controller
 class PostController {
 
-    private PostService postService
-    private UserService userService
-    private TagsService tagsService
+    private final PostService postService
+    private final UserService userService
+    private final TagsService tagsService
+    private final CommentsService commentsService
 
-    PostController(PostService postService, UserService userService, TagsService tagsService) {
+    PostController(PostService postService, UserService userService, TagsService tagsService,
+                   CommentsService commentsService) {
         this.postService = postService
         this.userService = userService
         this.tagsService = tagsService
+        this.commentsService = commentsService
     }
 
 
@@ -99,13 +103,14 @@ class PostController {
         PostDTO post = postService.getPostDtoById(id)
         boolean deletable = postService.isDeletable(post, userName)
         boolean editable = postService.isEditable(post, userName)
+        model.addAttribute("postId", id)
         model.addAttribute("userId", userId )
         model.addAttribute("post", post)
         model.addAttribute("username", userName)
         model.addAttribute("author", postService.getAuthorName(post))
         model.addAttribute("delete", deletable)
         model.addAttribute("edit", editable)
-
+        model.addAttribute("answers", commentsService.getComments(post))
         return "post/post"
     }
 
@@ -163,19 +168,4 @@ class PostController {
         return "redirect:/posts"
     }
 
-    @GetMapping("/posts/post/{id}/answer")
-    def getAnswerForm(@PathVariable Long id, Model model, Authentication authentication) {
-        final userName = authentication.getName()
-        Long userId = userService.getUserByName(userName).getId()
-        PostDTO post = postService.getPostDtoById(id)
-        boolean deletable = postService.isDeletable(post, userName)
-        boolean editable = postService.isEditable(post, userName)
-        model.addAttribute("userId", userId )
-        model.addAttribute("post", post)
-        model.addAttribute("username", userName)
-        model.addAttribute("author", postService.getAuthorName(post))
-        model.addAttribute("delete", deletable)
-        model.addAttribute("edit", editable)
-        return "post/answerForm"
-    }
 }

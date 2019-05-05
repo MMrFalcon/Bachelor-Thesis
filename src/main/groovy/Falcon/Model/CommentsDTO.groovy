@@ -1,8 +1,13 @@
 package Falcon.Model
 
+
+import javax.validation.constraints.Size
+
 class CommentsDTO {
 
     private Long id
+
+    @Size(min = 5, max = 2000)
     private String commentMessage
     private Date created
     private Date updated

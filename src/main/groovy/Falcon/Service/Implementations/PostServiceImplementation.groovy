@@ -1,5 +1,6 @@
 package Falcon.Service.Implementations
 
+import Falcon.Exceptions.PostNotFoundException
 import Falcon.Model.PostDTO
 import Falcon.Model.TagsDTO
 import Falcon.Model.UserDTO
@@ -167,7 +168,7 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
         Post postEntity = getOne(id)
 
         if (PostDTO == null)
-            throw new NullPointerException("Empty model!")
+            throw new PostNotFoundException("Cannot find post!")
 
         postEntity.setTitle(postDTO.getTitle())
         postEntity.setContent(postDTO.getContent())
