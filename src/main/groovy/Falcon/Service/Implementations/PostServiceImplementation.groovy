@@ -38,7 +38,7 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
         log.info("User ${user.getUsername()} starts creation of new Post")
         if (user) {
             postEntity.setUser(user)
-        }else {
+        } else {
             throw new UsernameNotFoundException("User name is missing")
         }
         log.info("Post entity is ready for Tagging - ${postEntity}")
@@ -65,7 +65,7 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
                         saveAndFlush(postEntity)
                         tag.getPosts().add(postEntity)
                         tagsService.saveAndFlush(tag)
-                    }else {
+                    } else {
                         Tags tag = tagsService.saveAndFlush(Mapper.dtoToTags(tagsDTO))
                         log.info("Adding tag - ${tag} to post: ${postEntity}")
                         postEntity.getTags().add(tag)
@@ -109,7 +109,7 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
                     saveAndFlush(postEntity)
                     tag.getPosts().add(postEntity)
                     tagsService.saveAndFlush(tag)
-                }else {
+                } else {
                     Tags tag = tagsService.saveAndFlush(Mapper.dtoToTags(tagsDTO))
                     log.info("Adding tag to post: ${postEntity}")
                     postEntity.getTags().add(tag)
@@ -124,6 +124,30 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
         log.info("Tags list size after flashing Post entity: ${postEntity.getTags().size()}")
 
         return Mapper.postToDto(postEntity)
+    }
+
+    @Override
+    boolean isDeletable(PostDTO postDTO, String username) {
+        Post post = postRepository.getOne(postDTO.getId())
+        if (post.getUser().getUsername() != username || post.getComments().size() > 0) {
+            return false
+        }
+        return true
+    }
+
+    @Override
+    boolean isEditable(PostDTO postDTO, String username) {
+        Post post = postRepository.getOne(postDTO.getId())
+        if (post.getUser().getUsername() != username) {
+            return false
+        }
+        return true
+    }
+
+    @Override
+    String getAuthorName(PostDTO postDTO) {
+        String authorName = postRepository.getOne(postDTO.getId()).getUser().getUsername()
+        return authorName
     }
 
     @Override

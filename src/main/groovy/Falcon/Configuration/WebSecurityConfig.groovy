@@ -38,8 +38,9 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.authorizeRequests().antMatchers("/creator","/posts","/user/panel/**","/error/errorPage")
-                .hasAnyAuthority("READ_AUTHORITY","WRITE_PRIVILEGE")
+        http.authorizeRequests().antMatchers("/creator", "/posts", "/user/panel/**", "/error/errorPage",
+                "/posts/**","edit/**")
+                .hasAnyAuthority("READ_AUTHORITY", "WRITE_PRIVILEGE")
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -56,7 +57,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Bean
-     DaoAuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider authenticationProvider() {
         final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider()
         authProvider.setUserDetailsService(userDetailsService)
         authProvider.setPasswordEncoder(passwordEncoder())
@@ -67,7 +68,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     static PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder()
     }
-
 
 
 }

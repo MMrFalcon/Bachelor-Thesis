@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <title>Posts</title>
     <meta charset="UTF-8"/>
@@ -11,65 +9,34 @@
           th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css} ">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-
-<nav th:replace="fragments/header :: header">
-
-</nav>
-
-<div class="container postsList">
-
-    <!--/*@thymesVar id="post" type="Falcon.Persist.Post"*/-->
-    <th:block th:each="post : ${posts}">
-        <div class="jumbotron">
-
-            <div class="d-inline float-left">
-                <a th:href="@{/edit/}+${post.id}">
-                    <i class="fa fa-edit"></i>
-                </a>
+<nav th:replace="fragments/header :: header"></nav>
+<div class="jumbotron d-flex align-items-center">
+    <div class="container">
+        <!--/*@thymesVar id="post" type="Falcon.Persist.Post"*/-->
+        <th:block th:each="post : ${posts}">
+            <div class="card mt-3">
+                <div class="card-header">
+                    <a th:href="@{'/posts/post/'}+${post.id}" th:text="${post.title}"
+                       class="btn btn-primary btn-lg btn-block">Post</a>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <th:block th:each="oneTag : ${post.tags}">
+                            <h5 class="card-text" th:text="${oneTag.tag}+'&nbsp;'">tags </h5>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="card-footer text-muted"
+                     th:text="'Created: &nbsp;' + ${#dates.format(post.createdDate, 'dd-MM-yyyy HH:mm')}">
+                    created
+                </div>
             </div>
-
-            <div class="d-inline float-right">
-                <a th:href="@{/delete/}+${post.id}">
-                    <i class="fa fa-close"></i>
-                </a>
-            </div>
-
-            <br/>
-
-            <div class="postContent">
-                <h2 th:text="${post.title}"></h2>
-                <p th:text="${post.content}"></p>
-            </div>
-
-            <div class="d-flex ">
-                <small th:text="'Made by: ' + ${post.user.username}"></small>
-            </div>
-            <div class="d-inline float-right">
-                <small th:text="'Created: ' + ${#dates.format(post.createdDate, 'dd-MM-yyyy HH:mm')}"></small>
-            </div>
-
-            <div class="d-inline float-left">
-                <small th:text="'Last update: ' + ${#dates.format(post.updatedDate, 'dd-MM-yyyy HH:mm')}"></small>
-            </div>
-            <br/>
-            <br/>
-
-
-            <th:block th:each="oneTag : ${post.tags}">
-                <button type="button" class="btn btn-outline-dark btn-sm"><p th:text="${oneTag.tag}"></p></button>
-            </th:block>
-
-
-        </div>
-    </th:block>
-
+        </th:block>
+    </div>
 </div>
-
-
 </body>
 </html>

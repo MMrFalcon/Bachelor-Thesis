@@ -11,45 +11,60 @@ import javax.validation.constraints.Size
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name="users")
+@Table(name = "users")
 class User extends BaseEntity {
 
-    @Column(unique = true, name="username")
+    @Column(unique = true, name = "username")
     @NotNull
     @NotEmpty
-    @Size(min=5, max=25)
+    @Size(min = 5, max = 25)
     private String username
 
     @NotNull
     @NotEmpty
-    @Column(name="password")
-    @Size(min=9, max=25)
+    @Column(name = "password")
+    @Size(min = 9, max = 25)
     private String password
 
     @Email
     @NotNull
     @NotEmpty
-    @Column(unique = true, name="email")
+    @Column(unique = true, name = "email")
     private String email
 
-    @Column(name="points")
+    @Column(name = "points")
     private Long points
 
     @OneToMany(mappedBy = "user")
     private Set<Post> posts = new HashSet<>()
 
+    @OneToMany(mappedBy = "user")
+    private Set<Comments> comments = new HashSet<>()
+
+    Set<Comments> getComments() {
+        return comments
+    }
+
+    void setComments(Set<Comments> comments) {
+        this.comments = comments
+    }
 
     String getPassword() { password }
-    String getUsername() { username }
-    String getEmail(){ email }
-    Long getPoints(){ points }
 
+    String getUsername() { username }
+
+    String getEmail() { email }
+
+    Long getPoints() { points }
 
 
     void setEmail(String email) { this.email = email }
-    void setUsername(String username) {this.username = username}
-    void setPassword(String password) {this.password = password}
-    void setPoints(Long points) {this.points = points}
+
+    void setUsername(String username) { this.username = username }
+
+    void setPassword(String password) { this.password = password }
+
+    void setPoints(Long points) { this.points = points }
 
     Set<Post> getPosts() {
         return posts
@@ -60,7 +75,7 @@ class User extends BaseEntity {
     }
 
     @PrePersist
-    void setPointsAtStart(){
+    void setPointsAtStart() {
         if (this.points == 0 || this.points == null)
             this.points = 0
     }

@@ -47,7 +47,7 @@ abstract class BaseServiceImplementation <T extends BaseEntity, K extends Serial
         if(entity.isActive()) {
             return entity
         }else{
-            throw new InactiveEntityException("You try to find inactive entity!")
+            throw new InactiveEntityException("You are trying to find an inactive entity!")
         }
     }
 

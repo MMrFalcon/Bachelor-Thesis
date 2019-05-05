@@ -1,8 +1,10 @@
 package Falcon.Service.Implementations
 
+import Falcon.Model.CommentsDTO
 import Falcon.Model.PostDTO
 import Falcon.Model.TagsDTO
 import Falcon.Model.UserDTO
+import Falcon.Persist.Comments
 import Falcon.Persist.Post
 import Falcon.Persist.Tags
 import Falcon.Persist.User
@@ -38,6 +40,16 @@ class Mapper {
     static Tags dtoToTags(TagsDTO tagsDTO) {
         ModelMapper modelMapper = new ModelMapper()
         return modelMapper.map(tagsDTO, Tags)
+    }
+
+    static Comments dtoToComments(CommentsDTO commentsDTO) {
+        ModelMapper modelMapper = new ModelMapper()
+        return modelMapper.map(commentsDTO, Comments)
+    }
+
+    static CommentsDTO commentsToDto(Comments comments) {
+        ModelMapper modelMapper = new ModelMapper()
+        return modelMapper.map(comments, CommentsDTO)
     }
 
 }

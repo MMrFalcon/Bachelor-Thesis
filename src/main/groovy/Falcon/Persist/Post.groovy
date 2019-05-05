@@ -9,7 +9,7 @@ import javax.validation.constraints.Size
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name="post")
+@Table(name = "post")
 class Post extends BaseEntity {
     @NotNull
     @Size(min = 3, max = 40)
@@ -28,8 +28,19 @@ class Post extends BaseEntity {
 
     @ManyToMany
     @JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
-               inverseJoinColumns = @JoinColumn(name = "tags_id", referencedColumnName = "id"))
-      private Set<Tags> tags = new HashSet<>()
+            inverseJoinColumns = @JoinColumn(name = "tags_id", referencedColumnName = "id"))
+    private Set<Tags> tags = new HashSet<>()
+
+    @OneToMany(mappedBy = "post")
+    private Set<Comments> comments = new HashSet<>()
+
+    Set<Comments> getComments() {
+        return comments
+    }
+
+    void setComments(Set<Comments> comments) {
+        this.comments = comments
+    }
 
     Set<Tags> getTags() {
         return tags
@@ -48,9 +59,11 @@ class Post extends BaseEntity {
     }
 
     String getTitle() { title }
+
     String getContent() { content }
 
     void setTitle(String title) { this.title = title }
+
     void setContent(String content) { this.content = content }
 
-    }
+}

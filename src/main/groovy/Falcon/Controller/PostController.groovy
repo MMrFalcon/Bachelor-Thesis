@@ -75,7 +75,7 @@ class PostController {
         if (postDTO)
             userService.updateUserPoints(authentication.getName(), 1L)
 
-        return "redirect:/posts"
+        return "redirect:/posts/post/${postDTO.getId()}"
     }
 
 
@@ -90,6 +90,23 @@ class PostController {
         model.addAttribute("tags", tagsService.getAll().toList())
 
         return "post/posts"
+    }
+
+    @GetMapping("/posts/post/{id}")
+    def showPost(@PathVariable Long id, Model model, Authentication authentication) {
+        final userName = authentication.getName()
+        Long userId = userService.getUserByName(userName).getId()
+        PostDTO post = postService.getPostDtoById(id)
+        boolean deletable = postService.isDeletable(post, userName)
+        boolean editable = postService.isEditable(post, userName)
+        model.addAttribute("userId", userId )
+        model.addAttribute("post", post)
+        model.addAttribute("username", userName)
+        model.addAttribute("author", postService.getAuthorName(post))
+        model.addAttribute("delete", deletable)
+        model.addAttribute("edit", editable)
+
+        return "post/post"
     }
 
     @GetMapping("/edit/{id}")
@@ -137,12 +154,27 @@ class PostController {
         Set<TagsDTO> tagsDTOs = tagsService.generateTags(tagsDTO.getTag(), postService.getPostDtoById(postId))
         postService.updatePostTags(postId,tagsDTOs)
 
-        return "redirect:/posts"
+        return "redirect:/posts/post/${postId}"
     }
 
     @GetMapping("/delete/{id}")
     def deletePost(@PathVariable Long id) {
         postService.delete(id)
         return "redirect:/posts"
+    }
+
+    @GetMapping("/posts/post/{id}/answer")
+    def getAnswerForm(@PathVariable Long id, Model model, Authentication authentication) {
+        final userName = authentication.getName()
+        Long userId = userService.getUserByName(userName).getId()
+        PostDTO post = postService.getPostDtoById(id)
+        boolean deletable = postService.isDeletable(post, userName)
+        boolean editable = postService.isEditable(post, userName)
+        model.addAttribute("userId", userId )
+        model.addAttribute("post", post)
+        model.addAttribute("username", userName)
+        model.addAttribute("author", postService.getAuthorName(post))
+        model.addAttribute("delete", deletable)
+        model.addAttribute("edit", editable)
     }
 }
