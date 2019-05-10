@@ -16,7 +16,7 @@
 <nav th:replace="fragments/header :: header"></nav>
 <div class="jumbotron d-flex align-items-center">
     <div class="container">
-        <!--/*@thymesVar id="post" type="Falcon.Persist.Post"*/-->
+        <!--/*@thymesVar id="post" type="com.falcon.forum.persist.Post"*/-->
         <th:block th:each="post : ${posts}">
             <div class="card mt-3">
                 <div class="card-header">

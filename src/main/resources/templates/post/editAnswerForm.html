@@ -19,7 +19,7 @@
 
 <div class="jumbotron d-flex align-items-center">
     <div class="container">
-        <!--/*@thymesVar id="post" type="Falcon.Model.PostDTO"*/-->
+        <!--/*@thymesVar id="post" type="com.falcon.forum.model.PostDTO"*/-->
         <div class="card text-center" th:object="${post}">
             <div class="card-header" th:text="${author}">
                 UserName
@@ -40,7 +40,7 @@
             </div>
         </div>
 
-        <!--/*@thymesVar id="answers" type="Falcon.Model.CommentsDTO"*/-->
+        <!--/*@thymesVar id="answers" type="com.falcon.forum.model.CommentsDTO"*/-->
         <th:block th:each="answer:${answers}">
             <div class="card">
                 <div class="card-header" th:text="${author}">
@@ -55,7 +55,7 @@
         </th:block>
 
 
-        <!--/*@thymesVar id="comment" type="Falcon.Model.CommentsDTO"*/-->
+        <!--/*@thymesVar id="comment" type="com.falcon.forum.model.CommentsDTO"*/-->
         <form method="post" action="#" th:object="${comment}" th:action="@{'/posts/post/'}+${postId}+'/answer/'+${answerId}+'/edit'">
             <div class="form-group ">
                 <label for="commentMessage">Answer</label>

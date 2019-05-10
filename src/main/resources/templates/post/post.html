@@ -19,12 +19,28 @@
 
 <div class="jumbotron d-flex align-items-center">
     <div class="container">
-        <!--/*@thymesVar id="post" type="Falcon.Model.PostDTO"*/-->
-        <div class="card text-center" th:object="${post}">
-            <div class="card-header" th:text="${author}">
-                UserName
+        <!--/*@thymesVar id="post" type="com.falcon.forum.model.PostDTO"*/-->
+        <div class="card" th:object="${post}">
+            <div class="card-header">
+
+                <div class="d-flex mb-1">
+                    <div class="mr-auto p-2 ">
+                        <a th:href="@{/voteup/}+${post.id}">
+                            <i class="fa fa-caret-square-o-up fa-3x"></i>
+                        </a>
+                    </div>
+                    <div class="p-2 ">
+                        <h5 th:text="${author}">Author</h5>
+                    </div>
+                    <div class="p-2 ">
+                        <a th:href="@{/votedown/}+${post.id}">
+                            <i class="fa fa-caret-square-o-down fa-3x"></i>
+                        </a>
+                    </div>
+                </div>
+
             </div>
-            <div class="card-body">
+            <div class="card-body text-center">
                 <div th:if="${edit}" class="d-inline float-left">
                     <a th:if="${edit}" th:href="@{/edit/}+${post.id}">
                         <i th:if="${edit}" class="fa fa-edit"></i>
@@ -53,7 +69,7 @@
             </div>
         </div>
 
-        <!--/*@thymesVar id="answers" type="Falcon.Persist.Comments"*/-->
+        <!--/*@thymesVar id="answers" type="com.falcon.forum.persist.Comments"*/-->
         <th:block th:each="answer:${answers}">
             <div class="card mt-2">
                 <div class="card-header">

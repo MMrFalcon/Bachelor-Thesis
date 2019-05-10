@@ -24,7 +24,7 @@
 
 <div class="container">
     <div class="jumbotron">
-        <!--/*@thymesVar id="post" type="Falcon.Persist.Post"*/-->
+        <!--/*@thymesVar id="post" type="com.falcon.forum.persist.Post"*/-->
         <form method="post" action="#" th:object="${post}" th:action="@{/creator}">
 
             <p th:if="${exist} == true" th:text="'Post already exist please reload the page'">Error message</p>
