@@ -34,6 +34,8 @@ class Post extends BaseEntity {
     @OneToMany(mappedBy = "post")
     private Set<Comments> comments = new HashSet<>()
 
+    private Long points
+
     Set<Comments> getComments() {
         return comments
     }
@@ -66,4 +68,11 @@ class Post extends BaseEntity {
 
     void setContent(String content) { this.content = content }
 
+    Long getPoints() {
+        return points
+    }
+
+    void setPoints(Long points) {
+        this.points = points
+    }
 }

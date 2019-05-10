@@ -146,6 +146,15 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
     }
 
     @Override
+    boolean isAuthor(PostDTO postDTO, String username) {
+        Post post = postRepository.getOne(postDTO.getId())
+        if (post.getUser().getUsername() == username) {
+            return true
+        }
+        return false
+    }
+
+    @Override
     String getAuthorName(PostDTO postDTO) {
         String authorName = postRepository.getOne(postDTO.getId()).getUser().getUsername()
         return authorName

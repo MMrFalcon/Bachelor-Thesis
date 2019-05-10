@@ -32,9 +32,16 @@
                         </th:block>
                     </div>
                 </div>
-                <div class="card-footer text-muted"
-                     th:text="'Created: &nbsp;' + ${#dates.format(post.createdDate, 'dd-MM-yyyy HH:mm')}">
-                    created
+                <div class="card-footer text-muted">
+
+                    <div class="d-flex mb-1">
+                        <div class="mr-auto p-2 text-muted">
+                            <small th:text="'Created: &nbsp;' + ${#dates.format(post.createdDate, 'dd-MM-yyyy HH:mm')}"> created</small>
+                        </div>
+                        <div class="p-2 text-muted">
+                            <small th:text="'Author: ' + ${post.user.username}">author</small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </th:block>

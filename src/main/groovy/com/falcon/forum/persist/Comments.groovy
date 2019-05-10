@@ -25,6 +25,15 @@ class Comments extends BaseEntity {
     @Column(unique = true)
     private String commentMessage
 
+    private Long points
+
+    private boolean isCorrect
+
+    @PrePersist
+    protected void setIsCorrectValue() {
+        this.isCorrect = false
+    }
+
     User getUser() {
         return user
     }
@@ -47,5 +56,21 @@ class Comments extends BaseEntity {
 
     void setCommentMessage(String commentMessage) {
         this.commentMessage = commentMessage
+    }
+
+    Long getPoints() {
+        return points
+    }
+
+    void setPoints(Long points) {
+        this.points = points
+    }
+
+    boolean getIsCorrect() {
+        return isCorrect
+    }
+
+    void setIsCorrect(boolean isCorrect) {
+        this.isCorrect = isCorrect
     }
 }

@@ -103,6 +103,7 @@ class PostController {
         PostDTO post = postService.getPostDtoById(id)
         boolean deletable = postService.isDeletable(post, userName)
         boolean editable = postService.isEditable(post, userName)
+        boolean isAuthor = postService.isAuthor(post, userName)
         model.addAttribute("postId", id)
         model.addAttribute("userId", userId )
         model.addAttribute("post", post)
@@ -111,6 +112,7 @@ class PostController {
         model.addAttribute("delete", deletable)
         model.addAttribute("edit", editable)
         model.addAttribute("answers", commentsService.getComments(post))
+        model.addAttribute("isAuthor", isAuthor)
         return "post/post"
     }
 

@@ -14,5 +14,6 @@ interface PostService extends  BaseService <Post, Long, PostRepository> {
     PostDTO updatePostTags(Long postId, Set<TagsDTO> tagsDTOs)
     boolean isDeletable(PostDTO postDTO, String username)
     boolean isEditable(PostDTO postDTO, String username)
+    boolean isAuthor(PostDTO postDTO, String username)
     String getAuthorName(PostDTO postDTO)
 }

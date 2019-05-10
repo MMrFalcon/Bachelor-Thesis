@@ -11,6 +11,8 @@ class CommentsDTO {
     private String commentMessage
     private Date created
     private Date updated
+    private Long points
+    private boolean isCorrect
 
     Long getId() {
         return id
@@ -42,5 +44,21 @@ class CommentsDTO {
 
     void setUpdated(Date updated) {
         this.updated = updated
+    }
+
+    Long getPoints() {
+        return points
+    }
+
+    void setPoints(Long points) {
+        this.points = points
+    }
+
+    boolean getIsCorrect() {
+        return isCorrect
+    }
+
+    void setIsCorrect(boolean isCorrect) {
+        this.isCorrect = isCorrect
     }
 }

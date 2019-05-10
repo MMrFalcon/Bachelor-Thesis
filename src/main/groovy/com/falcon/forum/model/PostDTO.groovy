@@ -7,6 +7,7 @@ class PostDTO {
     private String content
     private Date created
     private Date updated
+    private Long points
 
     PostDTO(){}
 
@@ -54,4 +55,11 @@ class PostDTO {
         this.updated = updated
     }
 
+    Long getPoints() {
+        return points
+    }
+
+    void setPoints(Long points) {
+        this.points = points
+    }
 }
