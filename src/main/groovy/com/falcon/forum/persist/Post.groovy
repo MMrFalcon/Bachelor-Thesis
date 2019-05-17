@@ -36,6 +36,23 @@ class Post extends BaseEntity {
 
     private Long points
 
+    private boolean resolved
+
+
+    @PrePersist
+    protected void loadPostDataBeforeInsert() {
+        this.resolved = false
+        this.points = 0L
+    }
+
+    boolean getResolved() {
+        return resolved
+    }
+
+    void setResolved(boolean resolved) {
+        this.resolved = resolved
+    }
+
     Set<Comments> getComments() {
         return comments
     }

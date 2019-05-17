@@ -25,7 +25,7 @@
 
                 <div th:unless="${isAuthor}" class="d-flex justify-content-between">
                     <div class="voteUp">
-                        <a th:href="@{'/voteup/'}+${post.id}">
+                        <a th:href="@{'/voteupPost/'}+${post.id}">
                             <i class="fa fa-caret-square-o-up fa-2x" style="color: green"></i>
                         </a>
                     </div>
@@ -33,7 +33,7 @@
                         <h5 th:text="${author}">Author</h5>
                     </div>
                     <div class="voteDown">
-                        <a th:href="@{'/votedown/'}+${post.id}">
+                        <a th:href="@{'/votedownPost/'}+${post.id}">
                             <i class="fa fa-caret-square-o-down fa-2x" style="color:red"></i>
                         </a>
                     </div>

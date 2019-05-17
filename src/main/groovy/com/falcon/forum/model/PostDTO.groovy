@@ -8,6 +8,7 @@ class PostDTO {
     private Date created
     private Date updated
     private Long points
+    private boolean resolved
 
     PostDTO(){}
 
@@ -16,6 +17,13 @@ class PostDTO {
         this.content = content
     }
 
+    boolean getResolved() {
+        return resolved
+    }
+
+    void setResoloved(boolean resolved) {
+        this.resolved = resolved
+    }
 
     String getTitle() {
         title
