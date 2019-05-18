@@ -30,8 +30,9 @@ class Comments extends BaseEntity {
     private boolean isCorrect
 
     @PrePersist
-    protected void setIsCorrectValue() {
+    protected void loadPostDataBeforeInsert() {
         this.isCorrect = false
+        this.points = 0L
     }
 
     User getUser() {

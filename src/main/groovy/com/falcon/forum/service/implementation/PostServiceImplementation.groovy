@@ -1,13 +1,16 @@
 package com.falcon.forum.service.implementation
 
 import com.falcon.forum.exception.PostNotFoundException
+import com.falcon.forum.model.CommentsDTO
 import com.falcon.forum.model.PostDTO
 import com.falcon.forum.model.TagsDTO
 import com.falcon.forum.model.UserDTO
+import com.falcon.forum.persist.Comments
 import com.falcon.forum.persist.Post
 import com.falcon.forum.persist.Tags
 import com.falcon.forum.persist.User
 import com.falcon.forum.repository.PostRepository
+import com.falcon.forum.service.CommentsService
 import com.falcon.forum.service.PostService
 import com.falcon.forum.service.TagsService
 import com.falcon.forum.service.UserService
@@ -23,11 +26,14 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
     private final PostRepository postRepository
     private final UserService userService
     private final TagsService tagsService
+    private final CommentsService commentsService
 
-    protected PostServiceImplementation(UserService userService, @Lazy TagsService tagsService, PostRepository postRepository) {
+    protected PostServiceImplementation(UserService userService, @Lazy TagsService tagsService,
+                                        PostRepository postRepository, @Lazy CommentsService commentsService) {
         this.userService = userService
         this.tagsService = tagsService
         this.postRepository = postRepository
+        this.commentsService = commentsService
         super.setRepository(postRepository)
     }
 
@@ -165,6 +171,13 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
         log.info("Searching for post with id ${id}")
         Post post = getOne(id)
         return Mapper.postToDto(post)
+    }
+
+    @Override
+    PostDTO getPostByAnswer(CommentsDTO commentsDTO) {
+        Comments comments = commentsService.getOne(commentsDTO.getId())
+        PostDTO post = Mapper.postToDto(comments.getPost())
+        return post
     }
 
     @Override

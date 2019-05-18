@@ -2,10 +2,7 @@ package com.falcon.forum.controller
 
 import com.falcon.forum.model.PostDTO
 import com.falcon.forum.model.TagsDTO
-import com.falcon.forum.service.CommentsService
-import com.falcon.forum.service.PostService
-import com.falcon.forum.service.TagsService
-import com.falcon.forum.service.UserService
+import com.falcon.forum.service.*
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -24,13 +21,15 @@ class PostController {
     private final UserService userService
     private final TagsService tagsService
     private final CommentsService commentsService
+    private final PointsService pointsService
 
     PostController(PostService postService, UserService userService, TagsService tagsService,
-                   CommentsService commentsService) {
+                   CommentsService commentsService, PointsService pointsService) {
         this.postService = postService
         this.userService = userService
         this.tagsService = tagsService
         this.commentsService = commentsService
+        this.pointsService = pointsService
     }
 
 
@@ -77,7 +76,7 @@ class PostController {
         PostDTO postDTO = postService.addPostTags(postId,tagsDTOs)
 
         if (postDTO)
-            userService.updateUserPoints(authentication.getName(), 1L)
+            pointsService.addPointsToUser(1L, userService.getUserByName(authentication.getName()))
 
         return "redirect:/posts/post/${postDTO.getId()}"
     }

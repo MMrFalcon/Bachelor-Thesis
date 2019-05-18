@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service
 @Service
 class UserServiceImplementation extends BaseServiceImplementation<User, Long, UserRepository> implements UserService {
 
-
     private final UserRepository userRepository
 
     UserServiceImplementation(UserRepository userRepository) {
@@ -69,21 +68,4 @@ class UserServiceImplementation extends BaseServiceImplementation<User, Long, Us
         }
     }
 
-    @Override
-    void updateUserPoints(String username, Long points) {
-        if (username == null)
-            throw new NullPointerException("Username doesn't exist")
-        if (points == null)
-            throw new NullPointerException("Empty object POINTS")
-
-        try {
-            User userEntity = userRepository.findByUsername(username)
-            userEntity.setPoints(userEntity.getPoints() + points)
-            log.info("Adding ${points} point/s to user ${userRepository.getOne(userEntity.getId())}")
-            saveAndFlush(userEntity)
-            log.info("User ${userRepository.getOne(userEntity.getId())} points after successfully flashing operation ${userEntity.getPoints()}")
-        } catch (Exception ex) {
-            log.error(ex.getMessage(),ex)
-        }
-    }
 }

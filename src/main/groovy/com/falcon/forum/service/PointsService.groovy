@@ -9,5 +9,7 @@ interface PointsService {
     void addPointsToPost(Long points, PostDTO postDTO)
     void subtractPointsFromUser(Long points, UserDTO userDTO)
     void subtractPointsFromPost(Long points, PostDTO postDTO)
+    void addPointsToAnswer(Long points, CommentsDTO commentsDTO)
+    void subtractPointsFromAnswer(Long points, CommentsDTO commentsDTO)
     void markAnswerAsCorrect(CommentsDTO commentsDTO)
 }

@@ -78,6 +78,32 @@ class PointsServiceImplementation implements PointsService {
     }
 
     @Override
+    void addPointsToAnswer(Long points, CommentsDTO commentsDTO) {
+        log.info("Searching for answer with id ${commentsDTO.getId()}...")
+        Comments comments = commentsService.getOne(commentsDTO.getId())
+        Long actualAnswerPoints = comments.getPoints()
+        Long updatedPoints = actualAnswerPoints + points
+        log.info("Actual answer points: ${actualAnswerPoints} - points for add ${points}")
+        comments.setPoints(updatedPoints)
+        Comments updatedAnswer = commentsService.save(comments)
+        log.info("Answer points after saving operation: ${updatedAnswer.getPoints()}")
+        addPointsToUser(points, Mapper.userToDTO(updatedAnswer.getUser()))
+    }
+
+    @Override
+    void subtractPointsFromAnswer(Long points, CommentsDTO commentsDTO) {
+        log.info("Searching for answer with id ${commentsDTO.getId()} for subtract operation...")
+        Comments comments = commentsService.getOne(commentsDTO.getId())
+        Long actualAnswerPoints = comments.getPoints()
+        Long updatedPoints = actualAnswerPoints - points
+        log.info("Actual answer points: ${actualAnswerPoints} - points for subtract operaton: ${points}")
+        comments.setPoints(updatedPoints)
+        Comments updatedAnswer = commentsService.save(comments)
+        log.info("Answer points after saving operation: ${updatedAnswer.points}")
+        subtractPointsFromUser(1L, Mapper.userToDTO(updatedAnswer.getUser()))
+    }
+
+    @Override
     void markAnswerAsCorrect(CommentsDTO commentsDTO) {
         log.info("Searching for answer with id ${commentsDTO.getId()} - preparing \"resolve\" operation...")
         Comments comment = commentsService.getOne(commentsDTO.getId())
