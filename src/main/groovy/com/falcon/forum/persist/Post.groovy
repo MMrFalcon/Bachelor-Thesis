@@ -34,6 +34,11 @@ class Post extends BaseEntity {
     @OneToMany(mappedBy = "post")
     private Set<Comments> comments = new HashSet<>()
 
+    @ManyToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+    @JoinTable(name = "post_users_votes", joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    private Set<User> postUsersVotes = new HashSet<>()
+
     private Long points
 
     private boolean resolved
@@ -43,6 +48,14 @@ class Post extends BaseEntity {
     protected void loadPostDataBeforeInsert() {
         this.resolved = false
         this.points = 0L
+    }
+
+    Set<User> getPostUsersVotes() {
+        return postUsersVotes
+    }
+
+    void setPostUsersVotes(Set<User> postUsersVotes) {
+        this.postUsersVotes = postUsersVotes
     }
 
     boolean getResolved() {

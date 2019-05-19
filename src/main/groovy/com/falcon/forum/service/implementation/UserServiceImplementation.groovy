@@ -10,6 +10,8 @@ import com.falcon.forum.service.UserService
 import groovy.util.logging.Slf4j
 import org.postgresql.util.PSQLState
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import org.springframework.transaction.support.TransactionSynchronizationManager
 
 @Slf4j
 @Service
@@ -22,8 +24,11 @@ class UserServiceImplementation extends BaseServiceImplementation<User, Long, Us
         super.setRepository(userRepository)
     }
 
+    @Transactional
     @Override
     UserDTO createUser(UserDTO userDTO) {
+        log.info("Transaction for user (creating): ${TransactionSynchronizationManager.isActualTransactionActive()} - " +
+                "${TransactionSynchronizationManager.getCurrentTransactionName()}")
         if (userDTO == null)
             throw new NullPointerException("You are trying to save an empty Object!")
         else {
@@ -49,6 +54,8 @@ class UserServiceImplementation extends BaseServiceImplementation<User, Long, Us
 
     @Override
     UserDTO getUserByName(String name) {
+        log.info("Transaction for user (get user by name): ${TransactionSynchronizationManager.isActualTransactionActive()} - " +
+                "${TransactionSynchronizationManager.getCurrentTransactionName()}")
         User userEntity = userRepository.findByUsername(name)
         try {
             UserDTO user = Mapper.userToDTO(userEntity)
@@ -60,6 +67,8 @@ class UserServiceImplementation extends BaseServiceImplementation<User, Long, Us
 
     @Override
     UserDTO getUserByEmail(String email) {
+        log.info("Transaction for user (get User by email): ${TransactionSynchronizationManager.isActualTransactionActive()} - " +
+                "${TransactionSynchronizationManager.getCurrentTransactionName()}")
         try {
             User userEntity = userRepository.findByEmail(email)
             return Mapper.userToDTO(userEntity)

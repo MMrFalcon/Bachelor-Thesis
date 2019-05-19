@@ -8,7 +8,7 @@ import javax.validation.constraints.Size
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name="comment")
+@Table(name = "comment")
 class Comments extends BaseEntity {
     @NotNull
     @ManyToOne
@@ -25,6 +25,11 @@ class Comments extends BaseEntity {
     @Column(unique = true)
     private String commentMessage
 
+    @ManyToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+    @JoinTable(name = "comments_users_votes", joinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    private Set<User> answerUsersVotes = new HashSet<>()
+
     private Long points
 
     private boolean isCorrect
@@ -33,6 +38,14 @@ class Comments extends BaseEntity {
     protected void loadPostDataBeforeInsert() {
         this.isCorrect = false
         this.points = 0L
+    }
+
+    Set<User> getAnswerUsersVotes() {
+        return answerUsersVotes
+    }
+
+    void setAnswerUsersVotes(Set<User> answerUsersVotes) {
+        this.answerUsersVotes = answerUsersVotes
     }
 
     User getUser() {

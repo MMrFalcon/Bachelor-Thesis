@@ -5,6 +5,7 @@ import com.falcon.forum.persist.BaseEntity
 import com.falcon.forum.service.BaseService
 import org.springframework.data.jpa.repository.JpaRepository
 
+import javax.persistence.EntityNotFoundException
 import java.util.stream.Collectors
 
 abstract class BaseServiceImplementation <T extends BaseEntity, K extends Serializable, R extends JpaRepository<T, K>>
@@ -42,7 +43,7 @@ abstract class BaseServiceImplementation <T extends BaseEntity, K extends Serial
     }
 
     @Override
-    T getOne(K id) {
+    T getOne(K id) throws EntityNotFoundException {
         T entity = repository.getOne(id)
         if(entity.isActive()) {
             return entity

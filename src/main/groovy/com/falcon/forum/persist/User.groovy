@@ -41,6 +41,28 @@ class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private Set<Comments> comments = new HashSet<>()
 
+    @ManyToMany(mappedBy = "postUsersVotes", cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+    private Set<Post> votedPosts = new HashSet<>()
+
+    @ManyToMany(mappedBy = "answerUsersVotes", cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+    private Set<Comments> votedComments = new HashSet<>()
+
+    Set<Comments> getVotedComments() {
+        return votedComments
+    }
+
+    void setVotedComments(Set<Comments> votedComments) {
+        this.votedComments = votedComments
+    }
+
+    Set<Post> getVotedPosts() {
+        return votedPosts
+    }
+
+    void setVotedPosts(Set<Post> votedPosts) {
+        this.votedPosts = votedPosts
+    }
+
     Set<Comments> getComments() {
         return comments
     }

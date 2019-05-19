@@ -6,29 +6,34 @@ import com.falcon.forum.model.UserDTO
 import com.falcon.forum.persist.Comments
 import com.falcon.forum.persist.Post
 import com.falcon.forum.persist.User
-import com.falcon.forum.service.CommentsService
-import com.falcon.forum.service.PointsService
-import com.falcon.forum.service.PostService
-import com.falcon.forum.service.UserService
+import com.falcon.forum.service.*
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import org.springframework.transaction.support.TransactionSynchronizationManager
 
 @Slf4j
 @Service
+@Transactional
 class PointsServiceImplementation implements PointsService {
 
     private final UserService userService
     private final CommentsService commentsService
     private final PostService postService
+    private final VoteService voteService
 
-    PointsServiceImplementation(UserService userService, CommentsService commentsService, PostService postService) {
+    PointsServiceImplementation(UserService userService, CommentsService commentsService, PostService postService,
+                                VoteService voteService) {
         this.userService = userService
         this.commentsService = commentsService
         this.postService = postService
+        this.voteService = voteService
     }
 
     @Override
     void addPointsToUser(Long points, UserDTO userDTO) {
+        log.info("Transaction status: ${TransactionSynchronizationManager.actualTransactionActive} - " +
+                "${TransactionSynchronizationManager.currentTransactionName}")
         log.info("Searching for user with id ${userDTO.getId()} for points update operation...")
         User user = userService.getOne(userDTO.getId())
         Long actualUserPoints = user.getPoints()
@@ -40,7 +45,9 @@ class PointsServiceImplementation implements PointsService {
     }
 
     @Override
-    void addPointsToPost(Long points, PostDTO postDTO) {
+    void addPointsToPost(Long points, PostDTO postDTO, String voteAuthorName) {
+        log.info("Transaction status: ${TransactionSynchronizationManager.actualTransactionActive} - " +
+                "${TransactionSynchronizationManager.currentTransactionName}")
         log.info("Searching for post with id ${postDTO.getId()}...")
         Post post = postService.getOne(postDTO.getId())
         Long actualPostPoints = post.getPoints()
@@ -50,10 +57,14 @@ class PointsServiceImplementation implements PointsService {
         Post savedPost = postService.save(post)
         log.info("Post points after saving operation: ${savedPost.getPoints()}")
         addPointsToUser(points, Mapper.userToDTO(savedPost.getUser()))
+        UserDTO voteAuthor = userService.getUserByName(voteAuthorName)
+        voteService.addVoteToPost(voteAuthor, Mapper.postToDto(savedPost))
     }
 
     @Override
     void subtractPointsFromUser(Long points, UserDTO userDTO) {
+        log.info("Transaction status: ${TransactionSynchronizationManager.actualTransactionActive} - " +
+                "${TransactionSynchronizationManager.currentTransactionName}")
         log.info("Searching for user with id ${userDTO.getId()} for points update operation...")
         User user = userService.getOne(userDTO.getId())
         Long actualUserPoints = user.getPoints()
@@ -65,7 +76,9 @@ class PointsServiceImplementation implements PointsService {
     }
 
     @Override
-    void subtractPointsFromPost(Long points, PostDTO postDTO) {
+    void subtractPointsFromPost(Long points, PostDTO postDTO, String voteAuthorName) {
+        log.info("Transaction status: ${TransactionSynchronizationManager.actualTransactionActive} - " +
+                "${TransactionSynchronizationManager.currentTransactionName}")
         log.info("Searching for post with id ${postDTO.getId()} for subtract operation...")
         Post post = postService.getOne(postDTO.getId())
         Long actualPostPoints = post.getPoints()
@@ -75,10 +88,14 @@ class PointsServiceImplementation implements PointsService {
         Post updatedPost = postService.save(post)
         log.info("Post points after saving operation: ${updatedPost.points}")
         subtractPointsFromUser(1L, Mapper.userToDTO(post.getUser()))
+        UserDTO voteAuthor = userService.getUserByName(voteAuthorName)
+        voteService.addVoteToPost(voteAuthor, Mapper.postToDto(updatedPost))
     }
 
     @Override
-    void addPointsToAnswer(Long points, CommentsDTO commentsDTO) {
+    void addPointsToAnswer(Long points, CommentsDTO commentsDTO, String voteAuthorName) {
+        log.info("Transaction status: ${TransactionSynchronizationManager.actualTransactionActive} - " +
+                "${TransactionSynchronizationManager.currentTransactionName}")
         log.info("Searching for answer with id ${commentsDTO.getId()}...")
         Comments comments = commentsService.getOne(commentsDTO.getId())
         Long actualAnswerPoints = comments.getPoints()
@@ -88,10 +105,14 @@ class PointsServiceImplementation implements PointsService {
         Comments updatedAnswer = commentsService.save(comments)
         log.info("Answer points after saving operation: ${updatedAnswer.getPoints()}")
         addPointsToUser(points, Mapper.userToDTO(updatedAnswer.getUser()))
+        UserDTO voteAuthor = userService.getUserByName(voteAuthorName)
+        voteService.addVoteToComment(voteAuthor, Mapper.commentsToDto(updatedAnswer))
     }
 
     @Override
-    void subtractPointsFromAnswer(Long points, CommentsDTO commentsDTO) {
+    void subtractPointsFromAnswer(Long points, CommentsDTO commentsDTO, String voteAuthorName) {
+        log.info("Transaction status: ${TransactionSynchronizationManager.actualTransactionActive} - " +
+                "${TransactionSynchronizationManager.currentTransactionName}")
         log.info("Searching for answer with id ${commentsDTO.getId()} for subtract operation...")
         Comments comments = commentsService.getOne(commentsDTO.getId())
         Long actualAnswerPoints = comments.getPoints()
@@ -101,10 +122,14 @@ class PointsServiceImplementation implements PointsService {
         Comments updatedAnswer = commentsService.save(comments)
         log.info("Answer points after saving operation: ${updatedAnswer.points}")
         subtractPointsFromUser(1L, Mapper.userToDTO(updatedAnswer.getUser()))
+        UserDTO voteAuthor = userService.getUserByName(voteAuthorName)
+        voteService.addVoteToComment(voteAuthor, Mapper.commentsToDto(updatedAnswer))
     }
 
     @Override
     void markAnswerAsCorrect(CommentsDTO commentsDTO) {
+        log.info("Transaction status: ${TransactionSynchronizationManager.actualTransactionActive} - " +
+                "${TransactionSynchronizationManager.currentTransactionName}")
         log.info("Searching for answer with id ${commentsDTO.getId()} - preparing \"resolve\" operation...")
         Comments comment = commentsService.getOne(commentsDTO.getId())
         log.info("Searching for post with id ${comment.getPost().getId()}...")
