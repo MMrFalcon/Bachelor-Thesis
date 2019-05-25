@@ -1,103 +1,89 @@
 body {
-margin: 0;
-padding: 0;
-background-image: url("https://i.imgur.com/ptpdMnm.jpg");
-background-repeat: no-repeat;
-background-size: cover;
-background-attachment: fixed;
-filter: alpha(opacity=80); /* For IE8 and earlier */
+    margin: 0;
+    padding: 0;
+    background-image: url("https://i.imgur.com/ptpdMnm.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    filter: alpha(opacity=80); /* For IE8 and earlier */
 }
-
-/*.panel {
-background: linear-gradient(120deg, #C33764 0%, #1D2671 100%);
-text-align: center;
-color:#fff;
-padding-top:50px;
-padding-bottom:50px;
-border-radius: 5px;
-}*/
-
-/*.panel input {
-    border-bottom: 1px solid #fff;
-    box-shadow: 0 1px 0 0 #fff;
-    color: #fff;
-}*/
 
 .panel form input[type="text"],
 .panel form input[type="password"],
-.panel form input[type="email"]{
-  border:none;
-  padding:10px 0 10px 0;
-  background-color: rgba(255, 255, 255, 0)!important;
-  background: rgba(255, 255, 255, 0);
-  color:#fff;
-  font-size:16px;
-  border-bottom:1px dotted #fff;
-  border-radius:0;
-  box-shadow:none!important;
-  height:auto;
+.panel form input[type="email"] {
+    border: none;
+    padding: 10px 0 10px 0;
+    background-color: rgba(255, 255, 255, 0) !important;
+    background: rgba(255, 255, 255, 0);
+    color: #fff;
+    font-size: 16px;
+    border-bottom: 1px dotted #fff;
+    border-radius: 0;
+    box-shadow: none !important;
+    height: auto;
 }
-.panel textarea{
-  background-color: rgba(255, 255, 255, 0)!important;
-  color:#fff!important;
+
+.panel textarea {
+    background-color: rgba(255, 255, 255, 0) !important;
+    color: #fff !important;
+}
+
+.successMessage {
+    background-color: #fff;
+    max-width: 460px;
+    margin: 0 auto;
+    border: 1px solid rgba(255, 255, 255, 0.4);;
+    background-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.2);
+    margin-top: 100px;
+    border-radius: 3px;
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+.successMessage h1 {
+    margin-top: auto;
+    margin-bottom: 20px;
+}
+
+.successMessage h3 {
+    margin-top: auto;
+    margin-bottom: 20px;
+}
+
+.successMessage a {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .panel {
-  background-color:#fff;
-  max-width:460px;
-  margin:0 auto;
-  border:1px solid rgba(255, 255, 255, 0.4);;
-  background-color: rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.2);
-  margin-top:40px;
-  -webkit-box-shadow: 0px 0px 30px 0px rgba(50, 50, 50, 0.32);
-  -moz-box-shadow:    0px 0px 30px 0px rgba(50, 50, 50, 0.32);
-  box-shadow:         0px 0px 30px 0px rgba(50, 50, 50, 0.32);
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-transition: background 1s ease-in-out;
-  -moz-transition: background 1s ease-in-out;
-  -ms-transition: background 1s ease-in-out;
-  -o-transition: background 1s ease-in-out;
-  transition: background 1s ease-in-ou
-  padding-top:50px;
-  padding-bottom:50px;
+    background-color: #fff;
+    max-width: 460px;
+    margin: 0 auto;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.2);
+    margin-top: 40px;
+    border-radius: 3px;
+    padding-top: 50px;
+    padding-bottom: 50px;
 
-  }
+}
 
-  .panel form input::-webkit-input-placeholder { /* WebKit browsers */
-    color:    #fff;
-    font-weight:300;
-  }
-    .panel form input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-    color:    #fff;
-    font-weight:300;
-  }
-   .panel form input::-moz-placeholder { /* Mozilla Firefox 19+ */
-    color:    #fff;
-    font-weight:300;
-  }
-    .panel form input:-ms-input-placeholder { /* Internet Explorer 10+ */
-    color:    #fff;
-    font-weight:300;
-  }
+.panel form label {
+    color: #fff;
+    font-weight: 300;
+}
 
-  .panel form label {
-      color:    #fff;
-      font-weight:300;
-  }
+.panel form h2 {
+    color: #fff;
+    font-weight: 300;
+}
 
-  .panel form h2 {
-      color:    #fff;
-      font-weight:300;
-  }
+.icons {
+    color: #fff;
+    font-size: 30px;
+}
 
-  .icons {
-  color:#fff;
-  font-size: 30px;
-  }
-
-  h1 {
-  color:#fff;
-  }
+h1 {
+    color: #fff;
+}

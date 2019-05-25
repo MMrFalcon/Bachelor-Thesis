@@ -46,7 +46,12 @@ class RegisterController {
         }
 
 
-        return "redirect:/index"
+        return "redirect:/registerSuccess"
+    }
+
+    @GetMapping("/registerSuccess")
+    def registerSuccess() {
+        return "user/registerSuccess"
     }
 
 }
