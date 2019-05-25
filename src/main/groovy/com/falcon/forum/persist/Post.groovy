@@ -17,7 +17,7 @@ class Post extends BaseEntity {
     private String title
 
     @NotNull
-    @Size(min = 5, max = 1000)
+    @Size(min = 5, max = 5000)
     @Column(unique = true)
     private String content
 

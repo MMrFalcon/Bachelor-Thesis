@@ -37,9 +37,10 @@ abstract class BaseServiceImplementation <T extends BaseEntity, K extends Serial
 
     @Override
     Collection<T> getAll() {
-        Closure active = {BaseEntity baseEntity -> baseEntity.isActive()}
-        return repository.findAll().stream()
-                .filter{BaseEntity baseEntity -> baseEntity.isActive()}.collect(Collectors.toList())
+       Collection<T> collect = repository.findAll().stream()
+               .filter{BaseEntity baseEntity -> baseEntity.isActive()}.collect(Collectors.toList())
+        collect.sort{a,b -> a.createdDate<=>b.createdDate}
+        return collect
     }
 
     @Override

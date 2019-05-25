@@ -21,7 +21,7 @@ class Comments extends BaseEntity {
     private Post post
 
     @NotNull
-    @Size(min = 5, max = 2000)
+    @Size(min = 5, max = 5000)
     @Column(unique = true)
     private String commentMessage
 
