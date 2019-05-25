@@ -1,15 +1,18 @@
 package com.falcon.forum.controller
 
+import com.falcon.forum.exception.VoteAlreadyAddedException
 import com.falcon.forum.model.CommentsDTO
 import com.falcon.forum.model.PostDTO
 import com.falcon.forum.service.CommentsService
 import com.falcon.forum.service.PointsService
 import com.falcon.forum.service.PostService
+import groovy.util.logging.Slf4j
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 
+@Slf4j
 @Controller
 class PointsController {
     private final PointsService pointsService
@@ -25,10 +28,14 @@ class PointsController {
     }
 
     @GetMapping("/voteup/{answerId}")
-    def addPointsToAnswer(@PathVariable Long answerId, Authentication authentication){
+    def addPointsToAnswer(@PathVariable Long answerId, Authentication authentication) {
         String authorName = authentication.getName()
         CommentsDTO answer = commentsService.getCommentDtoById(answerId)
-        pointsService.addPointsToAnswer(VOTE_UP_POINTS, answer, authorName)
+        try {
+            pointsService.addPointsToAnswer(VOTE_UP_POINTS, answer, authorName)
+        } catch (VoteAlreadyAddedException ex) {
+            log.warn(ex.getMessage())
+        }
         Long postId = postService.getPostByAnswer(answer).getId()
         return "redirect:/posts/post/${postId}"
     }
@@ -37,7 +44,11 @@ class PointsController {
     def subtractPointsFromAnswer(@PathVariable Long answerId, Authentication authentication) {
         String authorName = authentication.getName()
         CommentsDTO answer = commentsService.getCommentDtoById(answerId)
-        pointsService.subtractPointsFromAnswer(VOTE_DOWN_POINTS, answer, authorName)
+        try {
+            pointsService.subtractPointsFromAnswer(VOTE_DOWN_POINTS, answer, authorName)
+        } catch (VoteAlreadyAddedException ex) {
+            log.warn(ex.getMessage())
+        }
         Long postId = postService.getPostByAnswer(answer).getId()
         return "redirect:/posts/post/${postId}"
     }
@@ -45,7 +56,11 @@ class PointsController {
     @GetMapping("/correctAnswer/{answerId}")
     def markAnswerAsCorrect(@PathVariable Long answerId) {
         CommentsDTO answer = commentsService.getCommentDtoById(answerId)
-        pointsService.markAnswerAsCorrect(answer)
+        try {
+            pointsService.markAnswerAsCorrect(answer)
+        } catch (VoteAlreadyAddedException ex) {
+            log.warn(ex.getMessage())
+        }
         Long postId = postService.getPostByAnswer(answer).getId()
         return "redirect:/posts/post/${postId}"
     }
@@ -54,7 +69,11 @@ class PointsController {
     def addPointsToPost(@PathVariable Long postId, Authentication authentication) {
         String authorName = authentication.getName()
         PostDTO post = postService.getPostDtoById(postId)
-        pointsService.addPointsToPost(VOTE_UP_POINTS, post, authorName)
+        try {
+            pointsService.addPointsToPost(VOTE_UP_POINTS, post, authorName)
+        } catch (VoteAlreadyAddedException ex) {
+            log.warn(ex.getMessage())
+        }
         return "redirect:/posts/post/${postId}"
     }
 
@@ -62,7 +81,11 @@ class PointsController {
     def subtractPointsFromPost(@PathVariable Long postId, Authentication authentication) {
         String authorName = authentication.getName()
         PostDTO post = postService.getPostDtoById(postId)
-        pointsService.subtractPointsFromPost(VOTE_DOWN_POINTS, post, authorName)
+        try {
+            pointsService.subtractPointsFromPost(VOTE_DOWN_POINTS, post, authorName)
+        } catch (VoteAlreadyAddedException ex) {
+            log.warn(ex.getMessage())
+        }
         return "redirect:/posts/post/${postId}"
     }
 

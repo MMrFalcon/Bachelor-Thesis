@@ -1,5 +1,6 @@
 package com.falcon.forum.service.implementation
 
+import com.falcon.forum.exception.VoteAlreadyAddedException
 import com.falcon.forum.model.CommentsDTO
 import com.falcon.forum.model.PostDTO
 import com.falcon.forum.model.UserDTO
@@ -32,6 +33,9 @@ class VoteServiceImpl implements VoteService {
         User user = userService.getOne(voteAuthor.getId())
         Post postEntity = postService.getOne(post.getId())
         log.info("Adding user with id ${user.getId()} to the vote Set.")
+        if (postEntity.getPostUsersVotes().contains(user)) {
+            throw new VoteAlreadyAddedException("Vote already added")
+        }
         postEntity.getPostUsersVotes().add(user)
         Post savedPost = postService.saveAndFlush(postEntity)
         log.info("Post votes size after flushing operation: ${savedPost.getPostUsersVotes().size()}")
@@ -42,6 +46,9 @@ class VoteServiceImpl implements VoteService {
         User user = userService.getOne(voteAuthor.getId())
         Comments commentsEntity = commentsService.getOne(comment.getId())
         log.info("Adding user with id ${user.getId()} to the vote Set.")
+        if (commentsEntity.getAnswerUsersVotes().contains(user)) {
+            throw new VoteAlreadyAddedException("Vote already added")
+        }
         commentsEntity.getAnswerUsersVotes().add(user)
         Comments savedComment = commentsService.saveAndFlush(commentsEntity)
         log.info("Comment votes size after flushing operation: ${savedComment.getAnswerUsersVotes().size()}")

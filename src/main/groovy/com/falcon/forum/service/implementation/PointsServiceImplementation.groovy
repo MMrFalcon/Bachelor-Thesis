@@ -1,5 +1,6 @@
 package com.falcon.forum.service.implementation
 
+import com.falcon.forum.exception.VoteAlreadyAddedException
 import com.falcon.forum.model.CommentsDTO
 import com.falcon.forum.model.PostDTO
 import com.falcon.forum.model.UserDTO
@@ -48,6 +49,7 @@ class PointsServiceImplementation implements PointsService {
     void addPointsToPost(Long points, PostDTO postDTO, String voteAuthorName) {
         log.info("Transaction status: ${TransactionSynchronizationManager.actualTransactionActive} - " +
                 "${TransactionSynchronizationManager.currentTransactionName}")
+
         log.info("Searching for post with id ${postDTO.getId()}...")
         Post post = postService.getOne(postDTO.getId())
         Long actualPostPoints = post.getPoints()
@@ -132,6 +134,9 @@ class PointsServiceImplementation implements PointsService {
                 "${TransactionSynchronizationManager.currentTransactionName}")
         log.info("Searching for answer with id ${commentsDTO.getId()} - preparing \"resolve\" operation...")
         Comments comment = commentsService.getOne(commentsDTO.getId())
+        if (comment.getIsCorrect()) {
+            throw new VoteAlreadyAddedException("Comment was already marked as correct")
+        }
         log.info("Searching for post with id ${comment.getPost().getId()}...")
         Post post = postService.getOne(comment.getPost().getId())
         comment.setIsCorrect(true)

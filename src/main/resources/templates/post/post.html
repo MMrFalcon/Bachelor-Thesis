@@ -103,6 +103,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!--Vote service for answer -->
                         <div th:unless="${answer.user.username}==${username}" class="d-flex justify-content-center">
                             <div class="voteUp">
                                 <a th:href="@{'/voteup/'}+${answer.id}">
@@ -110,7 +112,7 @@
                                 </a>
                             </div>
                             <div class="author ml-2">
-                                <p th:text="'points123'">Author</p>
+                                <p th:text="${answer.points}">Author</p>
                             </div>
                             <div class="voteDown ml-2">
                                 <a th:href="@{'/votedown/'}+${answer.id}">
@@ -118,6 +120,21 @@
                                 </a>
                             </div>
                         </div>
+
+                        <div th:if="${answer.user.username}==${username}" class="d-flex justify-content-center">
+                            <div class="voteUp">
+                                <i class="fa fa-caret-square-o-up fa-2x" style="color: grey"></i>
+                            </div>
+                            <div class="author ml-2">
+                                <p th:text="${answer.points}">Author</p>
+                            </div>
+                            <div class="voteDown ml-2">
+                                <i class="fa fa-caret-square-o-down fa-2x" style="color:grey"></i>
+                            </div>
+                        </div>
+
+                        <!--End of vote service -->
+
                         <div class="d-flex mb-1">
                             <div class="mr-auto p-2 text-muted">
                                 <small th:text="'Created: ' + ${#dates.format(answer.createdDate, 'dd-MM-yyyy HH:mm')}"></small>
