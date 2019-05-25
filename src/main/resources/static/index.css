@@ -35,6 +35,9 @@ body {
     border-radius: 3px;
     padding-top:50px;
     padding-bottom:50px;
+    -webkit-transition: background 1s ease-in-out;
+    -moz-transition: background 1s ease-in-out;
+    -o-transition: background 1s ease-in-out;
 
 }
 
