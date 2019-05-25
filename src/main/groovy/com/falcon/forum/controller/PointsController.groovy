@@ -17,7 +17,6 @@ class PointsController {
     private final CommentsService commentsService
     final Long VOTE_UP_POINTS = 1L
     final Long VOTE_DOWN_POINTS = 1L
-    final String VOTE_AUTHOR_NAME = Authentication.getName()
 
     PointsController(PointsService pointsService, PostService postService, CommentsService commentsService) {
         this.pointsService = pointsService
@@ -26,17 +25,19 @@ class PointsController {
     }
 
     @GetMapping("/voteup/{answerId}")
-    def addPointsToAnswer(@PathVariable Long answerId){
+    def addPointsToAnswer(@PathVariable Long answerId, Authentication authentication){
+        String authorName = authentication.getName()
         CommentsDTO answer = commentsService.getCommentDtoById(answerId)
-        pointsService.addPointsToAnswer(VOTE_UP_POINTS, answer, VOTE_AUTHOR_NAME)
+        pointsService.addPointsToAnswer(VOTE_UP_POINTS, answer, authorName)
         Long postId = postService.getPostByAnswer(answer).getId()
         return "redirect:/posts/post/${postId}"
     }
 
     @GetMapping("/votedown/{answerId}")
-    def subtractPointsFromAnswer(@PathVariable Long answerId) {
+    def subtractPointsFromAnswer(@PathVariable Long answerId, Authentication authentication) {
+        String authorName = authentication.getName()
         CommentsDTO answer = commentsService.getCommentDtoById(answerId)
-        pointsService.subtractPointsFromAnswer(VOTE_DOWN_POINTS, answer, VOTE_AUTHOR_NAME)
+        pointsService.subtractPointsFromAnswer(VOTE_DOWN_POINTS, answer, authorName)
         Long postId = postService.getPostByAnswer(answer).getId()
         return "redirect:/posts/post/${postId}"
     }
@@ -50,16 +51,18 @@ class PointsController {
     }
 
     @GetMapping("/voteupPost/{postId}")
-    def addPointsToPost(@PathVariable Long postId) {
+    def addPointsToPost(@PathVariable Long postId, Authentication authentication) {
+        String authorName = authentication.getName()
         PostDTO post = postService.getPostDtoById(postId)
-        pointsService.addPointsToPost(VOTE_UP_POINTS, post, VOTE_AUTHOR_NAME)
+        pointsService.addPointsToPost(VOTE_UP_POINTS, post, authorName)
         return "redirect:/posts/post/${postId}"
     }
 
     @GetMapping("/votedownPost/{postId}")
-    def subtractPointsFromPost(@PathVariable Long postId) {
+    def subtractPointsFromPost(@PathVariable Long postId, Authentication authentication) {
+        String authorName = authentication.getName()
         PostDTO post = postService.getPostDtoById(postId)
-        pointsService.subtractPointsFromPost(VOTE_DOWN_POINTS, post, VOTE_AUTHOR_NAME)
+        pointsService.subtractPointsFromPost(VOTE_DOWN_POINTS, post, authorName)
         return "redirect:/posts/post/${postId}"
     }
 

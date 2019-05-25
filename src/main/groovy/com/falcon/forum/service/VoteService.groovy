@@ -7,4 +7,6 @@ import com.falcon.forum.model.UserDTO
 interface VoteService {
     void addVoteToPost(UserDTO voteAuthor, PostDTO post)
     void addVoteToComment(UserDTO voteAuthor, CommentsDTO comment)
+    boolean isPostAuthor(String authorName, Long postId)
+    boolean isAnswerAuthor(String authorName, Long answerId)
 }

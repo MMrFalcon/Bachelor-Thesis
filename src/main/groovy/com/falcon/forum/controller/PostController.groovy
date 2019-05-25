@@ -22,14 +22,16 @@ class PostController {
     private final TagsService tagsService
     private final CommentsService commentsService
     private final PointsService pointsService
+    private final VoteService voteService
 
     PostController(PostService postService, UserService userService, TagsService tagsService,
-                   CommentsService commentsService, PointsService pointsService) {
+                   CommentsService commentsService, PointsService pointsService, VoteService voteService) {
         this.postService = postService
         this.userService = userService
         this.tagsService = tagsService
         this.commentsService = commentsService
         this.pointsService = pointsService
+        this.voteService = voteService
     }
 
 
@@ -112,6 +114,8 @@ class PostController {
         model.addAttribute("edit", editable)
         model.addAttribute("answers", commentsService.getComments(post))
         model.addAttribute("isAuthor", isAuthor)
+        model.addAttribute("isPostVoteAuthor", voteService.isPostAuthor(userName, post.getId()))
+        model.addAttribute("voteService", voteService)
         return "post/post"
     }
 

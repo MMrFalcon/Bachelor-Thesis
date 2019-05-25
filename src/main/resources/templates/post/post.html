@@ -24,15 +24,15 @@
             <div class="card-header">
 
                 <div th:unless="${isAuthor}" class="d-flex justify-content-between">
-                    <div class="voteUp">
+                    <div th:unless="${isPostVoteAuthor}" class="voteUp">
                         <a th:href="@{'/voteupPost/'}+${post.id}">
                             <i class="fa fa-caret-square-o-up fa-2x" style="color: green"></i>
                         </a>
                     </div>
-                    <div class="author">
+                    <div th:unless="${isPostVoteAuthor}" class="author">
                         <h5 th:text="${author}">Author</h5>
                     </div>
-                    <div class="voteDown">
+                    <div th:unless="${isPostVoteAuthor}" class="voteDown">
                         <a th:href="@{'/votedownPost/'}+${post.id}">
                             <i class="fa fa-caret-square-o-down fa-2x" style="color:red"></i>
                         </a>
@@ -40,6 +40,10 @@
                 </div>
 
                 <div th:if="${isAuthor}" class="d-flex justify-content-center"><h5 th:text="${author}">Author</h5></div>
+                <div th:if="${isPostVoteAuthor}" class="d-flex justify-content-center">
+                    <h5 th:text="${author}">Author</h5>
+                </div>
+
 
             </div>
             <div class="card-body text-center">
@@ -65,6 +69,10 @@
                     <small th:text="'Created: ' + ${#dates.format(post.created, 'dd-MM-yyyy HH:mm')}"></small>
                 </div>
 
+                <div class="d-inline-center">
+                    <small th:text="'Collected points: ' + ${post.points}" ></small>
+                </div>
+
                 <div class="d-inline float-left">
                     <small th:text="'Last update: ' + ${#dates.format(post.updated, 'dd-MM-yyyy HH:mm')}"></small>
                 </div>
@@ -73,7 +81,8 @@
 
             <!--/*@thymesVar id="answer" type="com.falcon.forum.persist.Comments"*/-->
             <th:block th:each="answer:${answers}">
-                <div class="card mt-2">
+                <!-- uncorrect answer -->
+                <div th:unless="${answer.isCorrect}" class="card mt-2">
                     <div class="card-header">
                         <div class="d-flex mb-1">
                             <div class="mr-auto p-2">
@@ -120,6 +129,61 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <blockquote class="blockquote mb-0">
+                            <p th:text="${answer.commentMessage}">Comment</p>
+                        </blockquote>
+                    </div>
+                </div>
+
+
+                <!-- correct answer -->
+                <div th:if="${answer.isCorrect}" class="card  mt-2">
+                    <div class="card-header">
+                        <div class="d-flex mb-1">
+                            <div class="mr-auto p-2">
+                                <h5 th:text="${answer.user.username}"></h5>
+                            </div>
+                            <div class="p-2">
+                                <div th:if="${answer.user.username}==${username}" class="d-inline float-left">
+                                    <a th:href="@{'/posts/post/'}+${postId}+'/answer/'+${answer.id}+'/edit'">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="p-2">
+                                <div th:if="${isAuthor}" class="d-inline float-left">
+                                    <a th:href="@{'/correctAnswer/'}+${answer.id}">
+                                        <i class="fa fa-check fa-2x" style="color: green"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:unless="${answer.user.username}==${username}" class="d-flex justify-content-center">
+                            <div class="voteUp">
+                                <a th:href="@{'/voteup/'}+${answer.id}">
+                                    <i class="fa fa-caret-square-o-up fa-2x" style="color: green"></i>
+                                </a>
+                            </div>
+                            <div class="author ml-2">
+                                <p th:text="${answer.points}">Author</p>
+                            </div>
+                            <div class="voteDown ml-2">
+                                <a th:href="@{'/votedown/'}+${answer.id}">
+                                    <i class="fa fa-caret-square-o-down fa-2x" style="color:red"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-1">
+                            <div class="mr-auto p-2 text-muted">
+                                <small th:text="'Created: ' + ${#dates.format(answer.createdDate, 'dd-MM-yyyy HH:mm')}"></small>
+                            </div>
+
+                            <div class="p-2 text-muted">
+                                <small th:text="'Last update: ' + ${#dates.format(answer.updatedDate, 'dd-MM-yyyy HH:mm')}"></small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body bg-success">
                         <blockquote class="blockquote mb-0">
                             <p th:text="${answer.commentMessage}">Comment</p>
                         </blockquote>

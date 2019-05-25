@@ -46,4 +46,20 @@ class VoteServiceImpl implements VoteService {
         Comments savedComment = commentsService.saveAndFlush(commentsEntity)
         log.info("Comment votes size after flushing operation: ${savedComment.getAnswerUsersVotes().size()}")
     }
+
+    @Override
+    boolean isPostAuthor(String authorName, Long postId) {
+        Long userId = userService.getUserByName(authorName).getId()
+        User userEntity = userService.getOne(userId)
+        Post post = postService.getOne(postId)
+        return post.getPostUsersVotes().contains(userEntity)
+    }
+
+    @Override
+    boolean isAnswerAuthor(String authorName, Long answerId) {
+        Long userId = userService.getUserByName(authorName).getId()
+        User userEntity = userService.getOne(userId)
+        Comments comments = commentsService.getOne(answerId)
+        return comments.getAnswerUsersVotes().contains(userEntity)
+    }
 }
