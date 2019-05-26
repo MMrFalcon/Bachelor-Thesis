@@ -3,7 +3,11 @@ package com.falcon.forum.service.implementation
 import com.falcon.forum.exception.DuplicateEmailException
 import com.falcon.forum.exception.DuplicateUsernameException
 import com.falcon.forum.exception.UserNotFoundException
+import com.falcon.forum.model.CommentsDTO
+import com.falcon.forum.model.PostDTO
 import com.falcon.forum.model.UserDTO
+import com.falcon.forum.persist.Comments
+import com.falcon.forum.persist.Post
 import com.falcon.forum.persist.User
 import com.falcon.forum.repository.UserRepository
 import com.falcon.forum.service.UserService
@@ -77,4 +81,76 @@ class UserServiceImplementation extends BaseServiceImplementation<User, Long, Us
         }
     }
 
+    @Override
+    Long getCountOfCorrectAnswers(UserDTO userDTO) {
+        User user = getOne(userDTO.getId())
+        Long score = 0L
+        user.getComments().each {
+            Comments comments ->
+                if (comments.isCorrect)
+                    score += 1L
+        }
+        return score
+    }
+
+
+    @Override
+    Long getAnswersPoints(UserDTO userDTO) {
+        User user = getOne(userDTO.getId())
+        Long score = 0L
+        user.getComments().each {
+            Comments comments ->
+                    score += comments.getPoints()
+        }
+        return score
+    }
+
+    @Override
+    Long getPostsPoints(UserDTO userDTO) {
+        User user = getOne(userDTO.getId())
+        Long score = 0L
+        user.getPosts().each {
+            Post post ->
+                score += post.getPoints()
+        }
+        return score
+    }
+
+    @Override
+    Long getNumberOfAddedPosts(UserDTO userDTO) {
+        return getOne(userDTO.getId()).getPosts().size()
+    }
+
+    @Override
+    Long getNumberOfAddedAnswers(UserDTO userDTO) {
+        return getOne(userDTO.getId()).getComments().size()
+    }
+
+    @Override
+    List<CommentsDTO> getCommentsDto(UserDTO userDTO) {
+        def comments  = [] as List<CommentsDTO>
+        User user = getOne(userDTO.getId())
+        log.info("Searching for comments...")
+        user.getComments().each {
+            Comments commentsEntity ->
+                comments.add(Mapper.commentsToDto(commentsEntity))
+        }
+        log.info("${comments.size()} comments found")
+        comments.sort {a,b -> a.created<=>b.created}
+        return comments
+    }
+
+    @Override
+    List<PostDTO> getPostsDto(UserDTO userDTO) {
+        def posts = [] as List<PostDTO>
+        User user = getOne(userDTO.getId())
+        log.info("Searching for posts")
+        user.getPosts().each {
+            Post post ->
+                posts.add(Mapper.postToDto(post))
+        }
+        log.info("${posts.size()} posts found")
+        posts.sort {a,b -> a.created<=>b.created}
+        return posts
+    }
 }

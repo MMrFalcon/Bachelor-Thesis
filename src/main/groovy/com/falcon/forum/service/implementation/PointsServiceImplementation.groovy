@@ -43,6 +43,35 @@ class PointsServiceImplementation implements PointsService {
         user.setPoints(updatedPoints)
         User updatedUser = userService.save(user)
         log.info("User points after saving operation: ${updatedUser.getPoints()}")
+        addPlusPointsToUser(points, Mapper.userToDTO(updatedUser))
+    }
+
+    @Override
+    void addPlusPointsToUser(Long points, UserDTO userDTO) {
+        log.info("Transaction status: ${TransactionSynchronizationManager.actualTransactionActive} - " +
+                "${TransactionSynchronizationManager.currentTransactionName}")
+        log.info("Searching for user with id ${userDTO.getId()} for points update operation...")
+        User user = userService.getOne(userDTO.getId())
+        Long actualUserPoints = user.getPlusPoints()
+        Long updatedPoints = actualUserPoints + points
+        log.info("Actual user plus points: ${actualUserPoints} - points for add: ${points}")
+        user.setPlusPoints(updatedPoints)
+        User updatedUser = userService.save(user)
+        log.info("User plus points after saving operation: ${updatedUser.getPlusPoints()}")
+    }
+
+    @Override
+    void addMinusPointsToUser(Long points, UserDTO userDTO) {
+        log.info("Transaction status: ${TransactionSynchronizationManager.actualTransactionActive} - " +
+                "${TransactionSynchronizationManager.currentTransactionName}")
+        log.info("Searching for user with id ${userDTO.getId()} for points update operation...")
+        User user = userService.getOne(userDTO.getId())
+        Long actualUserPoints = user.getMinusPoints()
+        Long updatedPoints = actualUserPoints + points
+        log.info("Actual user minus points: ${actualUserPoints} - points for add: ${points}")
+        user.setMinusPoints(updatedPoints)
+        User updatedUser = userService.save(user)
+        log.info("User minus points after saving operation: ${updatedUser.getMinusPoints()}")
     }
 
     @Override
@@ -75,6 +104,7 @@ class PointsServiceImplementation implements PointsService {
         user.setPoints(updatedPoints)
         User updatedUser = userService.save(user)
         log.info("User points after saving operation: ${updatedUser.getPoints()}")
+        addMinusPointsToUser(points, Mapper.userToDTO(updatedUser))
     }
 
     @Override

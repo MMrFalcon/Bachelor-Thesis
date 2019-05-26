@@ -114,4 +114,10 @@ class CommentsController {
         return "redirect:/posts/post/${id}"
     }
 
+    @GetMapping("/posts/answer/{answerId}")
+    def redirectToPost(@PathVariable Long answerId) {
+        Long postId = commentsService.getPostId(answerId)
+        return "redirect:/posts/post/${postId}"
+    }
+
 }

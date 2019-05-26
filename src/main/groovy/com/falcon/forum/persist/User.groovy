@@ -35,6 +35,10 @@ class User extends BaseEntity {
     @Column(name = "points")
     private Long points
 
+    private Long plusPoints
+
+    private Long minusPoints
+
     @OneToMany(mappedBy = "user")
     private Set<Post> posts = new HashSet<>()
 
@@ -46,6 +50,22 @@ class User extends BaseEntity {
 
     @ManyToMany(mappedBy = "answerUsersVotes", cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     private Set<Comments> votedComments = new HashSet<>()
+
+    Long getPlusPoints() {
+        return plusPoints
+    }
+
+    void setPlusPoints(Long plusPoints) {
+        this.plusPoints = plusPoints
+    }
+
+    Long getMinusPoints() {
+        return minusPoints
+    }
+
+    void setMinusPoints(Long minusPoints) {
+        this.minusPoints = minusPoints
+    }
 
     Set<Comments> getVotedComments() {
         return votedComments
@@ -98,8 +118,9 @@ class User extends BaseEntity {
 
     @PrePersist
     void setPointsAtStart() {
-        if (this.points == 0 || this.points == null)
-            this.points = 0
+        this.points = 0
+        this.plusPoints = 0
+        this.minusPoints = 0
     }
 
 }

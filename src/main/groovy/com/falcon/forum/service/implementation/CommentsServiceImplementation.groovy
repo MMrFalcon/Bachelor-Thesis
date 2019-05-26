@@ -74,16 +74,17 @@ class CommentsServiceImplementation extends BaseServiceImplementation<Comments, 
 
     @Override
     List<Comments> getComments(PostDTO postDTO) {
+        log.info("Searching for comments...")
         Post post = postService.getOne(postDTO.getId())
         def comments  = [] as List<Comments>
         post.getComments().each {
             Comments comment ->
                 comments.add(comment)
         }
+        log.info("${comments.size()} comments found")
+       comments.sort{a,b -> a.createdDate<=>b.createdDate}
 
-        def sortedComments = comments.sort()
-
-        return sortedComments
+        return comments
     }
 
     @Override
@@ -93,4 +94,10 @@ class CommentsServiceImplementation extends BaseServiceImplementation<Comments, 
         return Mapper.commentsToDto(comment)
     }
 
+    @Override
+    Long getPostId(Long answerId) {
+        log.info("Searching for post id with answer id ${answerId}")
+        Long postId = getOne(answerId).getPost().getId()
+        return postId
+    }
 }

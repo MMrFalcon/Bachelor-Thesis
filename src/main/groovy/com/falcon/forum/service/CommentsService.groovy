@@ -12,4 +12,5 @@ interface CommentsService extends BaseService<Comments, Long, CommentsRepository
     CommentsDTO updateComment(CommentsDTO commentsDTO, Long commentId)
     List<Comments> getComments(PostDTO postDTO)
     CommentsDTO getCommentDtoById(Long commentId)
+    Long getPostId(Long answerId)
 }
