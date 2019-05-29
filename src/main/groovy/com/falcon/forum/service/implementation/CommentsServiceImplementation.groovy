@@ -16,6 +16,8 @@ import com.falcon.forum.service.UserService
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Service
 
+import java.time.LocalDate
+
 @Slf4j
 @Service
 class CommentsServiceImplementation extends BaseServiceImplementation<Comments, Long, CommentsRepository>
@@ -66,7 +68,7 @@ class CommentsServiceImplementation extends BaseServiceImplementation<Comments, 
         }
         log.info("Updating comment with id ${commentId}")
         commentEntity.setCommentMessage(commentsDTO.getCommentMessage())
-        commentEntity.setUpdatedDate(new Date())
+        commentEntity.setUpdatedDate(LocalDate.now())
         Comments savedComment = save(commentEntity)
         log.info("Comment with id ${savedComment.getId()} successfully updated")
         return Mapper.commentsToDto(savedComment)
@@ -91,6 +93,9 @@ class CommentsServiceImplementation extends BaseServiceImplementation<Comments, 
     CommentsDTO getCommentDtoById(Long commentId) {
         log.info("Searching for comment with id ${commentId}")
         Comments comment = getOne(commentId)
+        if (comment == null) {
+            throw new CommentNotFoundException("Cannot find comment with id ${commentId}")
+        }
         return Mapper.commentsToDto(comment)
     }
 

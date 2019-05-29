@@ -10,13 +10,15 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
+import java.time.LocalDate
+
 @ControllerAdvice
 @RestController
 class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(InactiveEntityException.class)
     ResponseEntity<ExceptionResponse> handleInactiveEntityException(Exception ex, WebRequest request){
 
-        ExceptionResponse exResponse = new ExceptionResponse(timestamp: new Date(), message: ex.getMessage(),
+        ExceptionResponse exResponse = new ExceptionResponse(timestamp: LocalDate.now(), message: ex.getMessage(),
                 stackTrace: ex.getStackTrace().toString(), details: request.toString()
         )
 

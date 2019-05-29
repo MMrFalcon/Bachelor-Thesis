@@ -2,15 +2,17 @@ package com.falcon.forum.exception
 
 import groovy.transform.Canonical
 
+import java.time.LocalDate
+
 @Canonical
 class ExceptionResponse {
-    private Date timestamp
+    private LocalDate timestamp
     private String message
     private String stackTrace
     private String details
 
 
-    Date getTimestamp() {
+    LocalDate getTimestamp() {
         return timestamp
     }
 
@@ -27,7 +29,7 @@ class ExceptionResponse {
     }
 
 
-    Date setTimestamp(Date timestamp) { this.timestamp = timestamp}
+    LocalDate setTimestamp(LocalDate timestamp) { this.timestamp = timestamp}
     String setMessage(String message) {this.message = message}
     String setStackTrace(String stackTrace) { this.stackTrace = stackTrace}
     String setDetails(String details) { this.details = details}

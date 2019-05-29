@@ -46,6 +46,11 @@ abstract class BaseServiceImplementation <T extends BaseEntity, K extends Serial
     @Override
     T getOne(K id) throws EntityNotFoundException {
         T entity = repository.getOne(id)
+
+        if (entity == null) {
+            return null
+        }
+
         if(entity.isActive()) {
             return entity
         }else{

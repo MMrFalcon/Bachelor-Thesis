@@ -1,14 +1,16 @@
 package com.falcon.forum.model
 
 import javax.validation.constraints.Size
+import java.time.LocalDate
 
 class TagsDTO {
 
     Long id
     @Size(min=2)
     String tag
-    Date created
-    Date updated
+    LocalDate created
+    LocalDate updated
+    boolean active
 
     TagsDTO(){}
 

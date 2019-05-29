@@ -1,14 +1,17 @@
 package com.falcon.forum.model
 
+import java.time.LocalDate
+
 class PostDTO {
 
     Long id
     String title
     String content
-    Date created
-    Date updated
+    LocalDate created
+    LocalDate updated
     Long points
     boolean resolved
+    boolean active
 
     PostDTO(){}
 

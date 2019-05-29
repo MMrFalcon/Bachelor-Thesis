@@ -26,7 +26,7 @@ class Post extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user
 
-    @ManyToMany
+    @ManyToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinTable(name = "post_tag", joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tags_id", referencedColumnName = "id"))
     private Set<Tags> tags = new HashSet<>()

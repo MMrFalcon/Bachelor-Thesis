@@ -1,19 +1,21 @@
 package com.falcon.forum.service.implementation
 
-import com.falcon.forum.model.PostDTO
+import com.falcon.forum.exception.TagNotFoundException
 import com.falcon.forum.model.TagsDTO
 import com.falcon.forum.persist.Post
 import com.falcon.forum.persist.Tags
 import com.falcon.forum.repository.TagsRepository
 import com.falcon.forum.service.PostService
 import com.falcon.forum.service.TagsService
+import groovy.util.logging.Slf4j
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
 
 import javax.persistence.EntityNotFoundException
 
+@Slf4j
 @Service
-class TagsServiceImplementation extends BaseServiceImplementation<Tags, Long, TagsRepository> implements  TagsService {
+class TagsServiceImplementation extends BaseServiceImplementation<Tags, Long, TagsRepository> implements TagsService {
 
     private final TagsRepository tagsRepository
     private final PostService postService
@@ -25,78 +27,69 @@ class TagsServiceImplementation extends BaseServiceImplementation<Tags, Long, Ta
     }
 
     @Override
-    Set<TagsDTO> generateTags(String tags, PostDTO postDTO) {
+    Set<TagsDTO> generateTags(String tags) {
+        log.info("Generating tags...")
         Set<TagsDTO> tagsSet = new HashSet<>()
-        
+
         def splittedTags = tags.split(" ")
-        
+
         if (!splittedTags || splittedTags.size() == 0)
             throw new RuntimeException("Tags are empty")
 
         splittedTags.each {
-                String tag ->
-                    TagsDTO tagsDTO = new TagsDTO(tag)
-                    tagsSet.add(tagsDTO)
+            String tag ->
+                TagsDTO tagsDTO = new TagsDTO(tag)
+                tagsSet.add(tagsDTO)
         }
-
+        log.info("${tagsSet.size()} tags after generation")
         return tagsSet
     }
 
 
     String getPostTagsAsString(Long postId) {
+        log.info("Searching for post Tags...")
         Post post = postService.getOne(postId)
         def tagsString = ""
 
-        post.getTags().each {
+        post.getTags().toList().sort{a,b -> a.createdDate<=>b.createdDate}.each {
             Tags tags ->
-                tagsString+= "${tags.getTag()} "
+                tagsString += "${tags.getTag()} "
         }
-
+        log.info("${post.getTags().size()} tags was found")
         tagsString
     }
 
-    @Override
-    void removeTagsFromPost(PostDTO postDTO) {
-        Post postEntity = postService.getOne(postDTO.getId())
-        postEntity.getTags().each {
-            Tags tag ->
-                tag.getPosts().remove(postEntity)
-                saveAndFlush(tag)
-        }
-    }
 
     @Override
     TagsDTO getTagByName(String tag) {
+        log.info("Searching for tag ${tag}...")
         Optional<Tags> optionalTag = tagsRepository.findByTag(tag)
         if (optionalTag.isPresent())
             return Mapper.tagsToDTO(optionalTag.get())
         else
-            return null
-    }
-
-    @Override
-    TagsDTO getTagById(Long id) {
-        Tags tag = getOne(id)
-        if (tag)
-            return Mapper.tagsToDTO(tag)
-        else
-            return null
+            throw new TagNotFoundException("Tag ${tag} is not present!")
     }
 
     @Override
     Tags getTagEntityByName(String tag) {
+        log.info("Searching for tag entity with name ${tag}")
         Optional<Tags> optionalTag = tagsRepository.findByTag(tag)
         if (optionalTag.isPresent())
             return optionalTag.get()
         else
-            throw new EntityNotFoundException("Cannot find tag Entity")
+            throw new EntityNotFoundException("Tag ${tag} is not present!")
     }
 
     @Override
     boolean isPresent(String tag) {
-        if(getTagByName(tag))
+        log.info("Checking tag ${tag}...")
+        try {
+            getTagByName(tag)
+            log.info("Tag ${tag} was succesfully found")
             return true
-        else
+        } catch (TagNotFoundException ex) {
+            log.info(ex.getMessage())
             return false
+        }
     }
 }

@@ -43,8 +43,9 @@ class UserServiceImplementation extends BaseServiceImplementation<User, Long, Us
             } catch (UserNotFoundException exception) {
                 log.info("Adding usernem: ${userDTO.username} to new user")
             }
+
             try {
-                UserDTO user = getUserByEmail(userDTO.getEmail())
+                getUserByEmail(userDTO.getEmail())
                 throw new DuplicateEmailException("Email already exist", PSQLState.DATA_ERROR)
             } catch (UserNotFoundException exception) {
                 log.info("Adding email ${userDTO.email} to new user")

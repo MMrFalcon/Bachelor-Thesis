@@ -19,6 +19,8 @@ import org.springframework.context.annotation.Lazy
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 
+import java.time.LocalDate
+
 @Slf4j
 @Service
 class PostServiceImplementation extends BaseServiceImplementation<Post, Long, PostRepository> implements PostService {
@@ -42,8 +44,8 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
     PostDTO createPost(PostDTO postDTO, UserDTO userDTO) {
         Post postEntity = Mapper.dtoToPost(postDTO)
         User user = userService.getOne(userDTO.getId())
-        log.info("User ${user.getUsername()} starts creation of new Post")
         if (user) {
+            log.info("User ${user.getUsername()} starts creation of new Post")
             postEntity.setUser(user)
         } else {
             throw new UsernameNotFoundException("User name is missing")
@@ -70,15 +72,11 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
                         log.info("Adding Post ${postEntity} to existing tag ${tag}")
                         postEntity.getTags().add(tag)
                         saveAndFlush(postEntity)
-                        tag.getPosts().add(postEntity)
-                        tagsService.saveAndFlush(tag)
                     } else {
                         Tags tag = tagsService.saveAndFlush(Mapper.dtoToTags(tagsDTO))
                         log.info("Adding tag - ${tag} to post: ${postEntity}")
                         postEntity.getTags().add(tag)
                         saveAndFlush(postEntity)
-                        tag.getPosts().add(postEntity)
-                        tagsService.saveAndFlush(tag)
                     }
 
 
@@ -98,13 +96,13 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
 
         Post postEntity = getOne(postId)
 
-        if (postId == null)
-            throw new NullPointerException("Bad ID!")
+        if (postEntity == null)
+            throw new PostNotFoundException("Cannot find post with id ${postId}")
 
         if (!tagsDTOs && tagsDTOs.size() == 0)
             return Mapper.postToDto(postEntity)
 
-        tagsService.removeTagsFromPost(Mapper.postToDto(getOne(postId)))
+        log.info("Tags set size before update post: ${postEntity.getTags().size()}")
         postEntity.getTags().clear()
         saveAndFlush(postEntity)
         tagsDTOs.each {
@@ -114,21 +112,17 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
                     Tags tag = tagsService.getTagEntityByName(tagsDTO.getTag())
                     postEntity.getTags().add(tag)
                     saveAndFlush(postEntity)
-                    tag.getPosts().add(postEntity)
-                    tagsService.saveAndFlush(tag)
                 } else {
                     Tags tag = tagsService.saveAndFlush(Mapper.dtoToTags(tagsDTO))
                     log.info("Adding tag to post: ${postEntity}")
                     postEntity.getTags().add(tag)
                     saveAndFlush(postEntity)
-                    tag.getPosts().add(postEntity)
-                    tagsService.saveAndFlush(tag)
                 }
 
         }
 
         saveAndFlush(postEntity)
-        log.info("Tags list size after flashing Post entity: ${postEntity.getTags().size()}")
+        log.info("Tags set size after flashing Post entity: ${postEntity.getTags().size()}")
 
         return Mapper.postToDto(postEntity)
     }
@@ -183,18 +177,18 @@ class PostServiceImplementation extends BaseServiceImplementation<Post, Long, Po
     @Override
     PostDTO updatePost(Long id, PostDTO postDTO) {
 
-        if (id == null)
-            throw new NullPointerException("Bad ID!")
-
         log.info("Searching for post with id ${id}")
         Post postEntity = getOne(id)
 
-        if (PostDTO == null)
+        if (postEntity == null)
+            throw new PostNotFoundException("Cannot find post!")
+
+        if (postDTO == null)
             throw new PostNotFoundException("Cannot find post!")
 
         postEntity.setTitle(postDTO.getTitle())
         postEntity.setContent(postDTO.getContent())
-        postEntity.setUpdatedDate(new Date())
+        postEntity.setUpdatedDate(LocalDate.now())
 
         Post savedPost = save(postEntity)
         log.info("Post with id ${id} successfully updated")

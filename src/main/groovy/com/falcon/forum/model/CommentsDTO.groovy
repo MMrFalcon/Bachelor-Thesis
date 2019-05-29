@@ -2,6 +2,7 @@ package com.falcon.forum.model
 
 
 import javax.validation.constraints.Size
+import java.time.LocalDate
 
 class CommentsDTO {
 
@@ -9,9 +10,10 @@ class CommentsDTO {
 
     @Size(min = 5, max = 2000)
     String commentMessage
-    Date created
-    Date updated
+    LocalDate created
+    LocalDate updated
     Long points
     boolean isCorrect
+    boolean active
 
 }

@@ -1,12 +1,8 @@
 package com.falcon.forum.persist
 
-
 import groovy.transform.EqualsAndHashCode
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.ManyToMany
-import javax.persistence.Table
+import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 @EqualsAndHashCode(callSuper = true)
@@ -18,7 +14,7 @@ class Tags extends BaseEntity {
     @NotNull
     private String tag
 
-    @ManyToMany(mappedBy = "tags")
+    @ManyToMany(mappedBy = "tags", cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     private Set<Post> posts =  new HashSet<>()
 
     Tags() {}

@@ -74,7 +74,7 @@ class PostController {
         if(bindingResult.hasErrors())
             return "redirect:/tags/creator/" + postId
 
-        Set<TagsDTO> tagsDTOs = tagsService.generateTags(tagsDTO.getTag(), postService.getPostDtoById(postId))
+        Set<TagsDTO> tagsDTOs = tagsService.generateTags(tagsDTO.getTag())
         PostDTO postDTO = postService.addPostTags(postId,tagsDTOs)
 
         if (postDTO)
@@ -161,7 +161,7 @@ class PostController {
         if(bindingResult.hasErrors())
             return "redirect:/tags/creator/edit/" + postId
 
-        Set<TagsDTO> tagsDTOs = tagsService.generateTags(tagsDTO.getTag(), postService.getPostDtoById(postId))
+        Set<TagsDTO> tagsDTOs = tagsService.generateTags(tagsDTO.getTag())
         postService.updatePostTags(postId,tagsDTOs)
 
         return "redirect:/posts/post/${postId}"

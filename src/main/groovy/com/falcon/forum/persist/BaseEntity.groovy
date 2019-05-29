@@ -1,6 +1,7 @@
 package com.falcon.forum.persist
 
 import javax.persistence.*
+import java.time.LocalDate
 
 @MappedSuperclass
 @Inheritance
@@ -13,15 +14,15 @@ class BaseEntity implements Serializable {
     private boolean active
 
     @Column(name="created_date", updatable = false)
-    private Date createdDate
+    private LocalDate createdDate
 
     @Column(name="updated_date")
-    private Date updatedDate
+    private LocalDate updatedDate
 
     @PrePersist
     protected void loadDataBeforeInsert(){
-        this.createdDate = new Date()
-        this.updatedDate = new Date()
+        this.createdDate = LocalDate.now()
+        this.updatedDate = LocalDate.now()
         this.active = true
     }
 
@@ -29,10 +30,15 @@ class BaseEntity implements Serializable {
     void setActive(boolean active) {this.active = active}
     boolean isActive() { active }
 
-    void setUpdatedDate(Date updatedDate) { this.updatedDate = updatedDate}
+    void setUpdatedDate(LocalDate updatedDate) { this.updatedDate = updatedDate}
+
+    void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate
+    }
 
     Long getId() { id }
+    Long setId(Long id) {this.id = id}
 
-    Date getCreatedDate() { createdDate }
-    Date getUpdatedDate() { updatedDate }
+    LocalDate getCreatedDate() { createdDate }
+    LocalDate getUpdatedDate() { updatedDate }
 }
