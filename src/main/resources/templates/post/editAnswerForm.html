@@ -31,11 +31,11 @@
             <div class="card-footer text-muted">
 
                 <div class="d-inline float-right">
-                    <small th:text="'Created: ' + ${#dates.format(post.created, 'dd-MM-yyyy HH:mm')}"></small>
+                    <small th:text="'Created: ' + ${#temporals.format(post.created, 'dd-MM-yyyy')}"></small>
                 </div>
 
                 <div class="d-inline float-left">
-                    <small th:text="'Last update: ' + ${#dates.format(post.updated, 'dd-MM-yyyy HH:mm')}"></small>
+                    <small th:text="'Last update: ' + ${#temporals.format(post.updated, 'dd-MM-yyyy')}"></small>
                 </div>
             </div>
         </div>

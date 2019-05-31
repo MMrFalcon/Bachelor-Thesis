@@ -36,7 +36,7 @@
 
                     <div class="d-flex mb-1">
                         <div class="mr-auto p-2 text-muted">
-                            <small th:text="'Created: &nbsp;' + ${#dates.format(post.createdDate, 'dd-MM-yyyy HH:mm')}"> created</small>
+                            <small th:text="'Created: &nbsp;' + ${#temporals.format(post.createdDate, 'dd-MM-yyyy')}"> created</small>
                         </div>
                         <div class="p-2 text-muted">
                             <small th:text="'Author: ' + ${post.user.username}">author</small>

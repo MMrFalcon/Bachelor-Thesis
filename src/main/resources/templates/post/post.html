@@ -66,7 +66,7 @@
             <div class="card-footer text-muted">
 
                 <div class="d-inline float-right">
-                    <small th:text="'Created: ' + ${#dates.format(post.created, 'dd-MM-yyyy HH:mm')}"></small>
+                    <small th:text="'Created: ' + ${#temporals.format(post.created, 'dd-MM-yyyy')}"></small>
                 </div>
 
                 <div class="d-inline-center">
@@ -74,7 +74,7 @@
                 </div>
 
                 <div class="d-inline float-left">
-                    <small th:text="'Last update: ' + ${#dates.format(post.updated, 'dd-MM-yyyy HH:mm')}"></small>
+                    <small th:text="'Last update: ' + ${#temporals.format(post.updated, 'dd-MM-yyyy')}"></small>
                 </div>
             </div>
 
@@ -137,11 +137,11 @@
 
                         <div class="d-flex mb-1">
                             <div class="mr-auto p-2 text-muted">
-                                <small th:text="'Created: ' + ${#dates.format(answer.createdDate, 'dd-MM-yyyy HH:mm')}"></small>
+                                <small th:text="'Created: ' + ${#temporals.format(answer.createdDate, 'dd-MM-yyyy')}"></small>
                             </div>
 
                             <div class="p-2 text-muted">
-                                <small th:text="'Last update: ' + ${#dates.format(answer.updatedDate, 'dd-MM-yyyy HH:mm')}"></small>
+                                <small th:text="'Last update: ' + ${#temporals.format(answer.updatedDate, 'dd-MM-yyyy')}"></small>
                             </div>
                         </div>
                     </div>
@@ -192,11 +192,11 @@
                         </div>
                         <div class="d-flex mb-1">
                             <div class="mr-auto p-2 text-muted">
-                                <small th:text="'Created: ' + ${#dates.format(answer.createdDate, 'dd-MM-yyyy HH:mm')}"></small>
+                                <small th:text="'Created: ' + ${#temporals.format(answer.createdDate, 'dd-MM-yyyy')}"></small>
                             </div>
 
                             <div class="p-2 text-muted">
-                                <small th:text="'Last update: ' + ${#dates.format(answer.updatedDate, 'dd-MM-yyyy HH:mm')}"></small>
+                                <small th:text="'Last update: ' + ${#temporals.format(answer.updatedDate, 'dd-MM-yyyy')}"></small>
                             </div>
                         </div>
                     </div>

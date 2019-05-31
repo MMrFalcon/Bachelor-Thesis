@@ -11,7 +11,9 @@ import com.falcon.forum.service.PostService;
 import com.falcon.forum.service.UserService;
 import com.falcon.forum.service.VoteService;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -99,6 +101,7 @@ public class PointsServiceImplementationTest {
         comments.setActive(true);
         comments.setUser(postAuthor);
         comments.setPost(post);
+        comments.setIsCorrect(false);
 
         correctComments = new Comments();
         correctComments.setId(2L);
@@ -106,7 +109,7 @@ public class PointsServiceImplementationTest {
         correctComments.setActive(true);
         correctComments.setUser(postAuthor);
         correctComments.setPost(post);
-
+        correctComments.setIsCorrect(true);
 
     }
 
@@ -253,8 +256,37 @@ public class PointsServiceImplementationTest {
 
     @Test
     public void markAnswerAsCorrect() {
+        Long userPointsAfterAdd = 2L + user.getPoints();
+        Long userPlusPointsAfterAdd = 2L + user.getPlusPoints();
+
         when(commentsService.getOne(commentsDTO.getId())).thenReturn(comments);
+        when(commentsService.save(comments)).thenReturn(correctComments);
         when(postService.getOne(comments.getPost().getId())).thenReturn(post);
         when(postService.save(comments.getPost())).thenReturn(post);
+        when(userService.getOne(anyLong())).thenReturn(user);
+        when(userService.save(user)).thenReturn(user);
+        pointsServiceImplementation.markAnswerAsCorrect(commentsDTO);
+
+        assertEquals(userPointsAfterAdd, user.getPoints());
+        assertEquals(userPlusPointsAfterAdd, user.getPlusPoints());
+        verify(userService, times(2)).getOne(anyLong());
+        verify(userService, times(2)).save(user);
+        verify(commentsService, times(1)).getOne(commentsDTO.getId());
+        verify(commentsService, times(1)).save(comments);
+        verify(postService, times(1)).save(comments.getPost());
+        verify(postService, times(1)).getOne(comments.getPost().getId());
+
+    }
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+    @Test
+    public void markAnswerAsCorrectAlreadyCorrect() {
+        final String exceptionMessage = "Comment was already marked as correct";
+        expectedException.expect(RuntimeException.class);
+        expectedException.expectMessage(exceptionMessage);
+
+        when(commentsService.getOne(commentsDTO.getId())).thenReturn(correctComments);
+        pointsServiceImplementation.markAnswerAsCorrect(commentsDTO );
     }
 }

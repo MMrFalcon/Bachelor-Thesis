@@ -24,7 +24,7 @@ class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     UserDetails loadUserByUsername(String nameOfUser) throws UsernameNotFoundException {
         UserDTO user = userService.getUserByName(nameOfUser)
-        if(!user) { throw new UsernameNotFoundException(nameOfUser)}
+        if(!user) { throw new UsernameNotFoundException("Cannot find user with name ${nameOfUser}")}
 
         user.setPassword(passwordEncoder.encode(user.getPassword()))
 
