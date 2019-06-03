@@ -1,7 +1,6 @@
 package com.falcon.forum.controller
 
 import com.falcon.forum.model.PostDTO
-import com.falcon.forum.model.TagsDTO
 import com.falcon.forum.service.*
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -56,33 +55,6 @@ class PostController {
 
         return "redirect:/tags/creator/" + postDTO.getId()
     }
-
-    @GetMapping(value = "/tags/creator/{postId}")
-    def getTagsForm(@PathVariable Long postId, Model model, Authentication authentication) {
-        Long userId = userService.getUserByName(authentication.getName()).getId()
-        model.addAttribute("tags", new TagsDTO())
-        model.addAttribute("username", authentication.getName())
-        model.addAttribute("userId", userId )
-        model.addAttribute("postId", postId)
-        return "post/tagsForm"
-}
-
-    @PostMapping(value = "/tags/creator/{postId}")
-    def sendPostedTags(@Valid @ModelAttribute("tags") TagsDTO tagsDTO, @PathVariable Long postId,
-                       BindingResult bindingResult, Authentication authentication) {
-
-        if(bindingResult.hasErrors())
-            return "redirect:/tags/creator/" + postId
-
-        Set<TagsDTO> tagsDTOs = tagsService.generateTags(tagsDTO.getTag())
-        PostDTO postDTO = postService.addPostTags(postId,tagsDTOs)
-
-        if (postDTO)
-            pointsService.addPointsToUser(1L, userService.getUserByName(authentication.getName()))
-
-        return "redirect:/posts/post/${postDTO.getId()}"
-    }
-
 
     @GetMapping("/posts")
     def getPosts(Model model, Authentication authentication) {
@@ -139,32 +111,6 @@ class PostController {
 
         postService.updatePost(id, post)
         return "redirect:/tags/creator/edit/" + id
-    }
-
-    @GetMapping("/tags/creator/edit/{postId}")
-    def editTags(@PathVariable Long postId, Model model, Authentication authentication) {
-        Long userId = userService.getUserByName(authentication.getName()).getId()
-
-        def tagsString = tagsService.getPostTagsAsString(postId)
-        TagsDTO tag =  new TagsDTO(tagsString)
-        model.addAttribute("tags", tag)
-        model.addAttribute("username", authentication.getName())
-        model.addAttribute("userId", userId )
-        model.addAttribute("postId", postId)
-        return "post/editTags"
-    }
-
-    @PostMapping("/tags/creator/edit/{postId}")
-    def updateTags(@Valid @ModelAttribute("tags") TagsDTO tagsDTO, @PathVariable Long postId,
-                   BindingResult bindingResult, Authentication authentication) {
-
-        if(bindingResult.hasErrors())
-            return "redirect:/tags/creator/edit/" + postId
-
-        Set<TagsDTO> tagsDTOs = tagsService.generateTags(tagsDTO.getTag())
-        postService.updatePostTags(postId,tagsDTOs)
-
-        return "redirect:/posts/post/${postId}"
     }
 
     @GetMapping("/delete/{id}")

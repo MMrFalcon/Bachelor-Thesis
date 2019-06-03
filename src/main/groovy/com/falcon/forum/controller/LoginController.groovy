@@ -27,7 +27,7 @@ class LoginController {
 
         if (authentication != null) {
             UserDTO userDTO = userService.getUserByName(authentication.getName())
-            return "user/panel/${userDTO.getId()}"
+            return "redirect:/user/panel/${userDTO.getId()}"
         }
 
         return "home/index"

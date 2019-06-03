@@ -28,19 +28,16 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider())
     }
 
-    //access in to the css files
+
     @Override
-    void configure(WebSecurity web) throws Exception {
-//        web.ignoring()
-//                .antMatchers("/resources/**")
-    }
+    void configure(WebSecurity web) throws Exception {}
 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.authorizeRequests().antMatchers("/creator", "/posts", "/user/panel/**", "/error/errorPage",
-                "/posts/**","edit/**")
+        http.csrf().disable().authorizeRequests().antMatchers("/creator", "/posts", "/user/panel/**", "/error/errorPage",
+                "/posts/**", "edit/**")
                 .hasAnyAuthority("READ_AUTHORITY", "WRITE_PRIVILEGE")
                 .and()
                 .formLogin()
@@ -50,10 +47,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
-
-        http.csrf().disable()
-
-
     }
 
 
