@@ -159,7 +159,9 @@ public class CommentsServiceImplementationTest {
     public void getCommentDtoById() {
         Long id = commentsDTO.getId();
 
-        when(commentsRepository.getOne(id)).thenReturn(null);
+        Comments comments = Mapper.dtoToComments(commentsDTO);
+
+        when(commentsRepository.getOne(id)).thenReturn(comments);
         CommentsDTO comment = commentsService.getCommentDtoById(id);
 
         assertNotNull(comment);
