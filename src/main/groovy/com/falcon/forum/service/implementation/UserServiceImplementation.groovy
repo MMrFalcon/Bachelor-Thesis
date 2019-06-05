@@ -2,6 +2,7 @@ package com.falcon.forum.service.implementation
 
 import com.falcon.forum.exception.DuplicateEmailException
 import com.falcon.forum.exception.DuplicateUsernameException
+import com.falcon.forum.exception.PasswordsException
 import com.falcon.forum.exception.UserNotFoundException
 import com.falcon.forum.model.CommentsDTO
 import com.falcon.forum.model.PostDTO
@@ -51,9 +52,14 @@ class UserServiceImplementation extends BaseServiceImplementation<User, Long, Us
                 log.info("Adding email ${userDTO.email} to new user")
             }
 
-            User user = save(Mapper.dtoToUser(userDTO))
-            log.info("New user with id ${userRepository.getOne(user.getId())} was created")
-            return Mapper.userToDTO(user)
+            if (passwordsEquals(userDTO.getPassword(), userDTO.getPasswordConfirmation())) {
+                User user = save(Mapper.dtoToUser(userDTO))
+                log.info("New user with id ${userRepository.getOne(user.getId())} was created")
+                return Mapper.userToDTO(user)
+            } else {
+                throw new PasswordsException("Passwords are not the same")
+            }
+
         }
     }
 
@@ -153,5 +159,10 @@ class UserServiceImplementation extends BaseServiceImplementation<User, Long, Us
         log.info("${posts.size()} posts found")
         posts.sort {a,b -> a.created<=>b.created}
         return posts
+    }
+
+    @Override
+    boolean passwordsEquals(String password, String confPassword) {
+        return password == confPassword
     }
 }

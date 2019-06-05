@@ -18,5 +18,6 @@ interface UserService extends BaseService<User, Long, UserRepository> {
     Long getNumberOfAddedAnswers(UserDTO userDTO)
     List<CommentsDTO> getCommentsDto(UserDTO userDTO)
     List<PostDTO> getPostsDto(UserDTO userDTO)
+    boolean passwordsEquals(String password, String confPassword)
 
 }

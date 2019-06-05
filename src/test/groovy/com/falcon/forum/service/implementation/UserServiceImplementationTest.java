@@ -2,6 +2,7 @@ package com.falcon.forum.service.implementation;
 
 import com.falcon.forum.exception.DuplicateEmailException;
 import com.falcon.forum.exception.DuplicateUsernameException;
+import com.falcon.forum.exception.PasswordsException;
 import com.falcon.forum.exception.UserNotFoundException;
 import com.falcon.forum.model.CommentsDTO;
 import com.falcon.forum.model.PostDTO;
@@ -20,8 +21,7 @@ import org.mockito.MockitoAnnotations;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class UserServiceImplementationTest {
@@ -63,8 +63,30 @@ public class UserServiceImplementationTest {
         assertEquals(createdUserDto.getUsername(), userDTO.getUsername());
     }
 
+
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+
+    @Test
+    public void createUserPasswordsAreNotTheSame() {
+
+        final String exceptionMessage = "Passwords are not the same";
+        expectedException.expect(PasswordsException.class);
+        expectedException.expectMessage(exceptionMessage);
+
+        User user = new User();
+        user.setId(1L);
+
+        userDTO.setPassword("first321");
+        userDTO.setPassword("second123");
+
+        User mappedUser = Mapper.dtoToUser(userDTO);
+
+        when(userRepository.getOne(any())).thenReturn(mappedUser);
+        userService.createUser(userDTO);
+
+    }
+
 
     @Test
     public void createUserUsernameAlreadyExist() {
@@ -290,5 +312,18 @@ public class UserServiceImplementationTest {
         assertEquals(postDTOS.size(), 2);
         assertEquals(postDTOS.get(0).getTitle(), secondPost.getTitle());
         verify(userRepository, times(1)).getOne(userDTO.getId());
+    }
+
+    @Test
+    public void passwordsEquals() {
+        String firstPass = "pass123";
+        String secondPass = "pass123";
+        String thirdPass = "pass321";
+
+        boolean shouldBeTrue = userService.passwordsEquals(firstPass, secondPass);
+        boolean shouldBeFalse = userService.passwordsEquals(firstPass, thirdPass);
+
+        assertTrue(shouldBeTrue);
+        assertFalse(shouldBeFalse);
     }
 }

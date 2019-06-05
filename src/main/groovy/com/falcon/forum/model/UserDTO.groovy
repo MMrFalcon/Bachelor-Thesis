@@ -22,6 +22,11 @@ class UserDTO {
     @Size(min = 9, max = 25)
     String password
 
+    @NotNull
+    @NotEmpty
+    @Size(min = 9, max = 25)
+    String passwordConfirmation
+
     @Email
     @NotNull
     @NotEmpty

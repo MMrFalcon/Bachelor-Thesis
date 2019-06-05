@@ -64,12 +64,14 @@
                 </div>
                 <br/>
 
-                <!-- <div class="form-group label-control form-inline">
+                <div class="form-group label-control form-inline">
                      <i class="fa fa-lock icons col-1"></i>
                      <label for="password" class="col-4">Confirm password</label>
-                     <input type="password" id="password2" class="form-control col-7" th:field="*{password}">
+                     <input type="password" id="password2" class="form-control col-7" th:field="*{passwordConfirmation}">
+                     <span class="text-danger" th:if="${#fields.hasErrors('passwordConfirmation')}" th:errors="*{passwordConfirmation}"></span>
+                    <span class="text-danger" th:if="${passwordException}" th:text="'Passwords are not the same'"></span>
                  </div>
-                 <br/>-->
+                 <br/>
 
                 <div class="text-center">
                     <input class="btn btn-outline-success" type="submit" value="REGISTER">
