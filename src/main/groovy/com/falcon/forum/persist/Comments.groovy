@@ -22,7 +22,7 @@ class Comments extends BaseEntity {
 
     @NotNull
     @Size(min = 5, max = 5000)
-    @Column(unique = true)
+    @Column(unique = true, length = 5000)
     private String commentMessage
 
     @ManyToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE])

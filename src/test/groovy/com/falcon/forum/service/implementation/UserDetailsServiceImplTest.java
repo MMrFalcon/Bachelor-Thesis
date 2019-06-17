@@ -10,10 +10,8 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 public class UserDetailsServiceImplTest {
@@ -22,19 +20,17 @@ public class UserDetailsServiceImplTest {
     private User user;
     private UserDTO userDTO;
 
-    @Mock
-    PasswordEncoder passwordEncoder;
 
     @Mock
     UserService userService;
+
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        userDetailsService = new UserDetailsServiceImpl();
-        this.userDetailsService.setPasswordEncoder(passwordEncoder);
-        this.userDetailsService.setUserService(userService);
+        userDetailsService = new UserDetailsServiceImpl(userService);
+
 
         user =  new User();
         user.setId(1L);
@@ -70,19 +66,6 @@ public class UserDetailsServiceImplTest {
         when(userService.getUserByName(badUserName)).thenReturn(null);
         userDetailsService.loadUserByUsername(badUserName);
 
-    }
-
-    @Test
-    public void getUserService() {
-       UserService userService = userDetailsService.getUserService();
-       assertNotNull(userService);
-    }
-
-
-    @Test
-    public void getPasswordEncoder() {
-        PasswordEncoder passwordEncoder = userDetailsService.getPasswordEncoder();
-        assertNotNull(passwordEncoder);
     }
 
 }

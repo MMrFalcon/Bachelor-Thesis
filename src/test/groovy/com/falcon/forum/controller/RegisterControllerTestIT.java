@@ -63,6 +63,7 @@ public class RegisterControllerTestIT {
         params.add("username", "Falcon");
         params.add("email", "mail@mail.com");
         params.add("password", "secret123");
+        params.add("passwordConfirmation", "secret123");
 
         when(userService.createUser(any())).thenReturn(userDTO);
         mockMvc.perform(post("/registration")

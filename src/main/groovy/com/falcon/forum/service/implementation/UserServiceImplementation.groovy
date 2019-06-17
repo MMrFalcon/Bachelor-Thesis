@@ -14,6 +14,7 @@ import com.falcon.forum.repository.UserRepository
 import com.falcon.forum.service.UserService
 import groovy.util.logging.Slf4j
 import org.postgresql.util.PSQLState
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.support.TransactionSynchronizationManager
@@ -23,9 +24,11 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 class UserServiceImplementation extends BaseServiceImplementation<User, Long, UserRepository> implements UserService {
 
     private final UserRepository userRepository
+    private final PasswordEncoder passwordEncoder
 
-    UserServiceImplementation(UserRepository userRepository) {
+    UserServiceImplementation(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository
+        this.passwordEncoder = passwordEncoder
         super.setRepository(userRepository)
     }
 
@@ -53,7 +56,9 @@ class UserServiceImplementation extends BaseServiceImplementation<User, Long, Us
             }
 
             if (passwordsEquals(userDTO.getPassword(), userDTO.getPasswordConfirmation())) {
-                User user = save(Mapper.dtoToUser(userDTO))
+                User userForSave = Mapper.dtoToUser(userDTO)
+                userForSave.setPassword(passwordEncoder.encode(userDTO.getPassword()))
+                User user = save(userForSave)
                 log.info("New user with id ${userRepository.getOne(user.getId())} was created")
                 return Mapper.userToDTO(user)
             } else {

@@ -19,12 +19,12 @@ class UserDTO {
 
     @NotNull
     @NotEmpty
-    @Size(min = 9, max = 25)
+    @Size(min = 9)
     String password
 
     @NotNull
     @NotEmpty
-    @Size(min = 9, max = 25)
+    @Size(min = 9)
     String passwordConfirmation
 
     @Email
